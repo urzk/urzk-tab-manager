@@ -1,15 +1,15 @@
 <script lang="ts">
-  export let title: string;
-  export let url: string;
-  export let id: string;
+  export let title: string = "";
+  export let url: string = "";
+  export let id: number = 0;
   //  export let thumb: string;
 
-  const selectTab = (tabId: string) => {
+  const selectTab = (tabId: number) => {
     chrome.tabs.update(tabId, { active: true });
   };
 </script>
 
-<li {id} on:click={() => selectTab(id)}>
+<li class="item-tab" {id} on:click={() => selectTab(id)}>
   <div class="item-tab-thumb"></div>
   <div class="item-tab-text">
     <h3 class="item-tab-title">{title}</h3>
@@ -19,21 +19,26 @@
 
 <style>
   li {
+    margin: 0;
+    padding: 0;
+    width: 300px;
+  }
+
+  .item-tab {
     display: flex;
     justify-content: space-between;
-    margin: 0;
     padding: 1rem;
-    width: 300px;
     background-color: aliceblue;
     border-radius: 0.25rem;
     color: black;
   }
-  li .item-tab-thumb {
+
+  .item-tab-thumb {
     width: 25%;
     height: 32px;
     background-color: aqua;
   }
-  li .item-tab-text {
+  .item-tab-text {
     width: 70%;
   }
   .item-tab-title {

@@ -1,8 +1,8 @@
-<script>
+<script lang="ts">
   import { onMount } from "svelte";
   import ItemTab from "./components/ItemTab.svelte";
 
-  let tabs = [];
+  let tabs: chrome.tabs.Tab[] = [];
 
   // タブ情報を更新する関数
   const updateTabs = () => {
@@ -12,7 +12,7 @@
   };
 
   // メッセージリスナーを設定
-  const messageListener = (message) => {
+  const messageListener = (message: any) => {
     if (message.type === "TAB_CHANGED") {
       updateTabs();
     }
@@ -45,7 +45,6 @@
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
-    justify-content: space-between;
     margin: 0;
     padding: 0;
   }
