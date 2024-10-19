@@ -4,11 +4,25 @@
 
   let tabs = [];
 
-  onMount(() => {
-    // Chrome タブ一覧を取得
-    chrome.tabs.query({ currentWindow: true }, function (result) {
+  // タブ情報を更新する関数
+  const updateTabs = () => {
+    chrome.tabs.query({ currentWindow: true }, (result) => {
       tabs = result;
     });
+  };
+
+  // メッセージリスナーを設定
+  const messageListener = (message) => {
+    if (message.type === "TAB_CHANGED") {
+      updateTabs();
+    }
+  };
+
+  onMount(() => {
+    // 現在のタブ一覧を取得して初期化
+    updateTabs();
+    // メッセージリスナーを登録
+    chrome.runtime.onMessage.addListener(messageListener);
   });
 </script>
 
@@ -17,7 +31,7 @@
     <h2>Open Tabs</h2>
     <ul>
       {#each tabs as tab}
-        <ItemTab title={tab.title} url={tab.url} />
+        <ItemTab id={tab.id} title={tab.title} url={tab.url} />
       {/each}
     </ul>
   </div>

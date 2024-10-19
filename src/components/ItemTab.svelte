@@ -1,10 +1,15 @@
 <script lang="ts">
   export let title: string;
   export let url: string;
+  export let id: string;
   //  export let thumb: string;
+
+  const selectTab = (tabId: string) => {
+    chrome.tabs.update(tabId, { active: true });
+  };
 </script>
 
-<li>
+<li {id} on:click={() => selectTab(id)}>
   <div class="item-tab-thumb"></div>
   <div class="item-tab-text">
     <h3 class="item-tab-title">{title}</h3>
