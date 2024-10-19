@@ -28,10 +28,15 @@
 
 <main>
   <div class="container-tabs">
-    <h2>Open Tabs</h2>
+    <h2>Tabs</h2>
     <ul>
       {#each tabs as tab}
-        <ItemTab id={tab.id} title={tab.title} url={tab.url} />
+        <ItemTab
+          faviconUrl={tab.favIconUrl}
+          id={tab.id}
+          title={tab.title}
+          url={tab.url}
+        />
       {/each}
     </ul>
   </div>
@@ -39,7 +44,7 @@
 
 <style>
   .container-tabs {
-    padding: 4rem;
+    padding: 2rem 4rem;
   }
   .container-tabs ul {
     display: flex;

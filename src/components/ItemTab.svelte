@@ -2,7 +2,7 @@
   export let title: string = "";
   export let url: string = "";
   export let id: number = 0;
-  //  export let thumb: string;
+  export let faviconUrl: string = "";
 
   const selectTab = (tabId: number) => {
     chrome.tabs.update(tabId, { active: true });
@@ -10,7 +10,7 @@
 </script>
 
 <li class="item-tab" {id} on:click={() => selectTab(id)}>
-  <div class="item-tab-thumb"></div>
+  <img src={faviconUrl} class="item-tab-thumb" />
   <div class="item-tab-text">
     <h3 class="item-tab-title">{title}</h3>
     <p class="item-tab-url">{url}</p>
@@ -34,12 +34,12 @@
   }
 
   .item-tab-thumb {
-    width: 25%;
-    height: 32px;
+    width: 24px;
+    height: 24px;
     background-color: aqua;
   }
   .item-tab-text {
-    width: 70%;
+    width: 80%;
   }
   .item-tab-title {
     margin-top: 0;
