@@ -1,10 +1,11 @@
 {
   "manifest_version": 3,
   "name": "Simple Chrome Extension",
-  "version": "1.0",
-  "description": "A simple Chrome extension example.",
+  "version": "0.1.0",
+  "description": "Display a list of all open tabs in a new tab.",
   "permissions": ["tabs"],
-  "action": {
-    "default_popup": "popup.html"
-  }
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {}
 }
