@@ -4,8 +4,8 @@
   "version": "0.1.0",
   "description": "Display a list of all open tabs in a new tab.",
   "permissions": ["tabs"],
-  "background": {
-    "service_worker": "background.js"
-  },
-  "action": {}
+  "action": {},
+  "chrome_url_overrides": {
+    "newtab": "dist/index.html"
+  }
 }
