@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { flip } from "svelte/animate";
   import ItemTab from "./components/ItemTab.svelte";
 
   let tabs: chrome.tabs.Tab[] = [];
@@ -30,13 +31,10 @@
   <div class="container-tabs">
     <h2>Tabs</h2>
     <ul>
-      {#each tabs as tab}
-        <ItemTab
-          faviconUrl={tab.favIconUrl}
-          id={tab.id}
-          title={tab.title}
-          url={tab.url}
-        />
+      {#each tabs as tab (tab.id)}
+        <li animate:flip={{ duration: 400 }}>
+          <ItemTab {tab} {tabs} />
+        </li>
       {/each}
     </ul>
   </div>
@@ -46,11 +44,19 @@
   .container-tabs {
     padding: 2rem 4rem;
   }
+
   .container-tabs ul {
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
     margin: 0;
     padding: 0;
+  }
+
+  .container-tabs ul > li {
+    display: block;
+    margin: 0;
+    padding: 0;
+    width: 300px;
   }
 </style>
