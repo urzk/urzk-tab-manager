@@ -30,10 +30,11 @@
   <div class="container-tabs">
     <h2>Tabs</h2>
     <ul>
-      {#each tabs as tab}
+      {#each tabs as tab (tab.id)}
         <ItemTab
           faviconUrl={tab.favIconUrl}
           id={tab.id}
+          index={tab.index}
           title={tab.title}
           url={tab.url}
         />

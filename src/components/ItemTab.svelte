@@ -1,24 +1,63 @@
 <script lang="ts">
+  export let faviconUrl: string = "";
+  export let id: number = 0;
+  export let index: number;
   export let title: string = "";
   export let url: string = "";
-  export let id: number = 0;
-  export let faviconUrl: string = "";
 
   const selectTab = (tabId: number) => {
     chrome.tabs.update(tabId, { active: true });
   };
+
+  const moveTab = (tabId: number, tabIndex: number, shift: number) => {
+    chrome.tabs.move(tabId, { index: tabIndex + shift }, (movedTab) => {
+      if (chrome.runtime.lastError) {
+        console.error("failed to move tab: " + chrome.runtime.lastError);
+      }
+    });
+  };
+
+  const moveTabToLeft = (tabId: number, tabIndex: number) => {
+    moveTab(tabId, tabIndex, -1);
+  };
+
+  const moveTabToRight = (tabId: number, tabIndex: number) => {
+    moveTab(tabId, tabIndex, 1);
+  };
 </script>
 
 <li class="item-tab" {id}>
-  <div class="item-tab-button-left">&leftarrow;</div>
-  <div class="item-tab-container" on:click={() => selectTab(id)}>
+  <div
+    class="item-tab-button-left"
+    role="button"
+    tabindex="0"
+    on:click={moveTabToLeft(id, index)}
+    on:keydown={moveTabToLeft(id, index)}
+  >
+    &leftarrow;
+  </div>
+  <div
+    class="item-tab-container"
+    role="button"
+    tabindex="0"
+    on:click={selectTab(id)}
+    on:keydown={selectTab(id)}
+  >
     <img src={faviconUrl} alt="favicon" class="item-tab-favicon" />
     <div class="item-tab-text">
       <h3 class="item-tab-title">{title}</h3>
       <p class="item-tab-url">{url}</p>
     </div>
   </div>
-  <div class="item-tab-button-right">&rightarrow;</div>
+  <div
+    class="item-tab-button-right"
+    role="button"
+    tabindex="0"
+    on:click={moveTabToRight(id, index)}
+    on:keydown={moveTabToRight(id, index)}
+  >
+    &rightarrow;
+  </div>
 </li>
 
 <style>
@@ -58,10 +97,18 @@
     left: 0.25rem;
   }
 
+  .item-tab:first-child > .item-tab-button-left {
+    display: none;
+  }
+
   .item-tab-button-right {
     transform: translate(50%, -50%);
     top: 50%;
     right: 0.25rem;
+  }
+
+  .item-tab:last-child > .item-tab-button-right {
+    display: none;
   }
 
   .item-tab-favicon {
