@@ -27,6 +27,11 @@ chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
   chrome.runtime.sendMessage({ type: "TAB_CHANGED" });
 });
 
+chrome.tabs.onReplaced.addListener((addedTabId, removedTabId) => {
+  // chrome.runtime.sendMessage({ type: "TAB_REPLACED", data: removeInfo });
+  chrome.runtime.sendMessage({ type: "TAB_CHANGED" });
+});
+
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.status === "complete") {
     // chrome.runtime.sendMessage({ type: "TAB_UPDATED", data: tab });

@@ -32,14 +32,8 @@
     <h2>Tabs</h2>
     <ul>
       {#each tabs as tab (tab.id)}
-        <li animate:flip={{ duration: (d) => Math.sqrt(d) * 20 }}>
-          <ItemTab
-            faviconUrl={tab.favIconUrl}
-            id={tab.id}
-            index={tab.index}
-            title={tab.title}
-            url={tab.url}
-          />
+        <li animate:flip={{ duration: 400 }}>
+          <ItemTab {tab} {tabs} />
         </li>
       {/each}
     </ul>
@@ -50,6 +44,7 @@
   .container-tabs {
     padding: 2rem 4rem;
   }
+
   .container-tabs ul {
     display: flex;
     flex-wrap: wrap;
@@ -57,6 +52,7 @@
     margin: 0;
     padding: 0;
   }
+
   .container-tabs ul > li {
     display: block;
     margin: 0;
