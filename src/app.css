@@ -6,11 +6,3 @@ body {
   background-color: #222;
   color: white;
 }
-
-li:first-child .item-tab-button-left {
-  display: none;
-}
-
-li:last-child .item-tab-button-right {
-  display: none;
-}

@@ -2,27 +2,47 @@
   export let tab: chrome.tabs.Tab;
   export let tabs: chrome.tabs.Tab[];
 
-  const selectTab = (tabId?: number) => {
-    if (!tabId) {
+  const selectTab = () => {
+    if (!tab.id) {
       console.error("error: Unset tab ID");
     } else {
-      chrome.tabs.update(tabId, { active: true });
+      chrome.tabs.update(tab.id, { active: true });
     }
   };
 
-  const closeTab = (tabId?: number) => {
-    if (!tabId) {
+  const closeTab = () => {
+    if (!tab.id) {
       console.error("error: Unset tab ID");
     } else {
-      chrome.tabs.remove(tabId);
+      chrome.tabs.remove(tab.id);
     }
   };
 
-  const discardTab = (tabId?: number) => {
-    if (!tabId) {
+  const discardTab = () => {
+    if (!tab.id) {
       console.error("error: Unset tab ID");
     } else {
-      chrome.tabs.discard(tabId);
+      chrome.tabs.discard(tab.id);
+    }
+  };
+
+  const onKeyDown = (event: KeyboardEvent) => {
+    switch (event.key) {
+      case "Enter":
+        selectTab();
+        break;
+      case "ArrowUp":
+        moveTabToUp();
+        break;
+      case "ArrowLeft":
+        moveTabToLeft();
+        break;
+      case "ArrowRight":
+        moveTabToRight();
+        break;
+      case "ArrowDown":
+        moveTabToDown();
+        break;
     }
   };
 
@@ -35,7 +55,7 @@
     }
   };
 
-  const moveTab = (tab: chrome.tabs.Tab, shift: number) => {
+  const moveTab = (shift: number) => {
     if (!tab.id) {
       console.error("error: Unset tab ID");
     } else {
@@ -57,7 +77,7 @@
 
   const moveTabVerticalShift = 4;
 
-  const moveTabToUp = (tab: chrome.tabs.Tab) => {
+  const moveTabToUp = () => {
     if (!tab.id) {
       console.error("error: Unset tab ID");
     } else {
@@ -66,7 +86,7 @@
     }
   };
 
-  const moveTabToDown = (tab: chrome.tabs.Tab) => {
+  const moveTabToDown = () => {
     if (!tab.id) {
       console.error("error: Unset tab ID");
     } else {
@@ -75,99 +95,107 @@
     }
   };
 
-  const moveTabToLeft = (tab: chrome.tabs.Tab) => {
-    moveTab(tab, -1);
+  const moveTabToLeft = () => {
+    moveTab(-1);
   };
 
-  const moveTabToRight = (tab: chrome.tabs.Tab) => {
-    moveTab(tab, 1);
+  const moveTabToRight = () => {
+    moveTab(1);
   };
 </script>
 
-<div class="item-tab" id={tab.id}>
+<div class="tab" id={tab.id}>
   <div
-    class="item-tab-button item-tab-button-discard"
+    class="tab-button tab-button-discard"
+    class:tab-button-active={!tab.discarded}
     role="button"
-    tabindex="0"
-    on:click={discardTab(tab.id)}
+    tabindex="-1"
+    on:click={discardTab}
   >
     &minus;
   </div>
   <div
-    class="item-tab-button item-tab-button-close"
+    class="tab-button tab-button-active tab-button-close"
     role="button"
-    tabindex="0"
-    on:click={closeTab(tab.id)}
+    tabindex="-1"
+    on:click={closeTab}
   >
     &cross;
   </div>
   <div
-    class="item-tab-button item-tab-button-up"
+    class="tab-button tab-button-up"
+    class:tab-button-active={tab.index >= moveTabVerticalShift}
     role="button"
-    tabindex="0"
-    on:click={moveTabToUp(tab)}
+    tabindex="-1"
+    on:click={moveTabToUp}
   >
     &uparrow;
   </div>
   <div
-    class="item-tab-button item-tab-button-left"
+    class="tab-button tab-button-left"
+    class:tab-button-active={tab.index > 0}
     role="button"
-    tabindex="0"
-    on:click={moveTabToLeft(tab)}
+    tabindex="-1"
+    on:click={moveTabToLeft}
   >
     &leftarrow;
   </div>
   <div
-    class="item-tab-button item-tab-button-right"
+    class="tab-button tab-button-right"
+    class:tab-button-active={tab.index < tabs.length - 1}
     role="button"
-    tabindex="0"
-    on:click={moveTabToRight(tab)}
+    tabindex="-1"
+    on:click={moveTabToRight}
   >
     &rightarrow;
   </div>
   <div
-    class="item-tab-button item-tab-button-down"
+    class="tab-button tab-button-down"
+    class:tab-button-active={tab.index < tabs.length - moveTabVerticalShift}
     role="button"
-    tabindex="0"
-    on:click={moveTabToDown(tab)}
+    tabindex="-1"
+    on:click={moveTabToDown}
   >
     &downarrow;
   </div>
   <div
-    class="item-tab-container"
-    class:item-tab-container-discarded={tab.discarded}
+    class="tab-container"
+    class:tab-container-discarded={tab.discarded}
     role="button"
     tabindex="0"
-    on:click={selectTab(tab.id)}
-    on:keydown={selectTab(tab.id)}
+    on:click={selectTab}
+    on:keydown={onKeyDown}
   >
-    <img src={tab.favIconUrl} alt="favicon" class="item-tab-favicon" />
-    <div class="item-tab-text">
-      <h3 class="item-tab-title">{tab.title}</h3>
-      <p class="item-tab-url">{tab.url}</p>
+    <img src={tab.favIconUrl} alt="favicon" class="tab-favicon" />
+    <div class="tab-text">
+      <h3 class="tab-title">{tab.title}</h3>
+      <p class="tab-url">{tab.url}</p>
     </div>
   </div>
 </div>
 
 <style>
-  .item-tab-container-discarded {
+  .tab-container-discarded {
     opacity: 0.5;
   }
-  .item-tab {
+  .tab {
     position: relative;
   }
 
-  .item-tab-container {
+  .tab-container {
     background-color: aliceblue;
     border-radius: 0.25rem;
     color: black;
+    cursor: pointer;
     display: flex;
     height: 96px;
     justify-content: space-between;
     padding: 1rem;
   }
 
-  .item-tab-button {
+  .tab-button {
+    cursor: pointer;
+    display: none;
     opacity: 0;
     position: absolute;
     width: 20px;
@@ -181,54 +209,59 @@
     z-index: 100;
   }
 
-  .item-tab:hover > .item-tab-button {
+  .tab-button-active {
+    display: block;
+  }
+
+  .tab:hover > .tab-button {
     opacity: 1;
   }
 
-  .item-tab-button-discard {
+  .tab-button-discard {
     border-radius: 100px;
     transform: translate(-50%, -50%);
     top: 0;
     left: 0;
   }
-  .item-tab-button-close {
+
+  .tab-button-close {
     border-radius: 100px;
     transform: translate(50%, -50%);
     top: 0;
     right: 0;
   }
 
-  .item-tab-button-up {
+  .tab-button-up {
     transform: translate(-50%, -50%);
     top: 0.25rem;
     left: 50%;
   }
-  .item-tab-button-left {
+  .tab-button-left {
     transform: translate(-50%, -50%);
     top: 50%;
     left: 0.25rem;
   }
 
-  .item-tab-button-right {
+  .tab-button-right {
     transform: translate(50%, -50%);
     top: 50%;
     right: 0.25rem;
   }
 
-  .item-tab-button-down {
+  .tab-button-down {
     transform: translate(-50%, 50%);
     bottom: 0.25rem;
     left: 50%;
   }
 
-  .item-tab-favicon {
+  .tab-favicon {
     width: 24px;
     height: 24px;
   }
-  .item-tab-text {
+  .tab-text {
     width: 80%;
   }
-  .item-tab-title {
+  .tab-title {
     margin-top: 0;
     margin-bottom: 0.5rem;
     display: -webkit-box;
@@ -237,7 +270,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  .item-tab-url {
+  .tab-url {
     margin: 0;
     display: -webkit-box;
     -webkit-box-orient: vertical;
