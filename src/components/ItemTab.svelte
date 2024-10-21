@@ -1,11 +1,16 @@
 <script lang="ts">
-  export let title: string;
-  export let url: string;
-  //  export let thumb: string;
+  export let title: string = "";
+  export let url: string = "";
+  export let id: number = 0;
+  export let faviconUrl: string = "";
+
+  const selectTab = (tabId: number) => {
+    chrome.tabs.update(tabId, { active: true });
+  };
 </script>
 
-<li>
-  <div class="item-tab-thumb"></div>
+<li class="item-tab" {id} on:click={() => selectTab(id)}>
+  <img src={faviconUrl} alt="favicon" class="item-tab-favicon" />
   <div class="item-tab-text">
     <h3 class="item-tab-title">{title}</h3>
     <p class="item-tab-url">{url}</p>
@@ -14,22 +19,26 @@
 
 <style>
   li {
+    margin: 0;
+    padding: 0;
+    width: 300px;
+  }
+
+  .item-tab {
     display: flex;
     justify-content: space-between;
-    margin: 0;
     padding: 1rem;
-    width: 300px;
     background-color: aliceblue;
     border-radius: 0.25rem;
     color: black;
   }
-  li .item-tab-thumb {
-    width: 25%;
-    height: 32px;
-    background-color: aqua;
+
+  .item-tab-favicon {
+    width: 24px;
+    height: 24px;
   }
-  li .item-tab-text {
-    width: 70%;
+  .item-tab-text {
+    width: 80%;
   }
   .item-tab-title {
     margin-top: 0;
