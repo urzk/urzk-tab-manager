@@ -9,12 +9,16 @@
   };
 </script>
 
-<li class="item-tab" {id} on:click={() => selectTab(id)}>
-  <img src={faviconUrl} alt="favicon" class="item-tab-favicon" />
-  <div class="item-tab-text">
-    <h3 class="item-tab-title">{title}</h3>
-    <p class="item-tab-url">{url}</p>
+<li class="item-tab" {id}>
+  <div class="item-tab-button-left">&leftarrow;</div>
+  <div class="item-tab-container" on:click={() => selectTab(id)}>
+    <img src={faviconUrl} alt="favicon" class="item-tab-favicon" />
+    <div class="item-tab-text">
+      <h3 class="item-tab-title">{title}</h3>
+      <p class="item-tab-url">{url}</p>
+    </div>
   </div>
+  <div class="item-tab-button-right">&rightarrow;</div>
 </li>
 
 <style>
@@ -25,12 +29,39 @@
   }
 
   .item-tab {
-    display: flex;
-    justify-content: space-between;
-    padding: 1rem;
+    position: relative;
     background-color: aliceblue;
     border-radius: 0.25rem;
     color: black;
+  }
+
+  .item-tab-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+  }
+
+  .item-tab-button-left,
+  .item-tab-button-right {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: #000;
+    color: white;
+    font-size: 20px;
+    line-height: 1;
+    text-align: center;
+  }
+  .item-tab-button-left {
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 0.25rem;
+  }
+
+  .item-tab-button-right {
+    transform: translate(50%, -50%);
+    top: 50%;
+    right: 0.25rem;
   }
 
   .item-tab-favicon {
