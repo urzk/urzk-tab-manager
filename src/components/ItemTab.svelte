@@ -10,7 +10,7 @@
 </script>
 
 <li class="item-tab" {id} on:click={() => selectTab(id)}>
-  <img src={faviconUrl} class="item-tab-thumb" />
+  <img src={faviconUrl} alt="favicon" class="item-tab-favicon" />
   <div class="item-tab-text">
     <h3 class="item-tab-title">{title}</h3>
     <p class="item-tab-url">{url}</p>
@@ -33,10 +33,9 @@
     color: black;
   }
 
-  .item-tab-thumb {
+  .item-tab-favicon {
     width: 24px;
     height: 24px;
-    background-color: aqua;
   }
   .item-tab-text {
     width: 80%;
