@@ -26,7 +26,7 @@
   };
 </script>
 
-<li class="item-tab" {id}>
+<div class="item-tab" {id}>
   <div
     class="item-tab-button-left"
     role="button"
@@ -58,20 +58,15 @@
   >
     &rightarrow;
   </div>
-</li>
+</div>
 
 <style>
-  li {
-    margin: 0;
-    padding: 0;
-    width: 300px;
-  }
-
   .item-tab {
     position: relative;
     background-color: aliceblue;
     border-radius: 0.25rem;
     color: black;
+    height: 100%;
   }
 
   .item-tab-container {
@@ -97,18 +92,10 @@
     left: 0.25rem;
   }
 
-  .item-tab:first-child > .item-tab-button-left {
-    display: none;
-  }
-
   .item-tab-button-right {
     transform: translate(50%, -50%);
     top: 50%;
     right: 0.25rem;
-  }
-
-  .item-tab:last-child > .item-tab-button-right {
-    display: none;
   }
 
   .item-tab-favicon {
