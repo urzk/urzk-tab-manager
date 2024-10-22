@@ -2,61 +2,41 @@
   import { onMount } from "svelte";
   import { flip } from "svelte/animate";
   import ItemTab from "./components/ItemTab.svelte";
+  import Window from "./components/Window.svelte";
 
-  let tabs: chrome.tabs.Tab[] = [];
+  let currentWindow: chrome.windows.Window;
+  let windows: chrome.windows.Window[] = [];
 
   // タブ情報を更新する関数
-  const updateTabs = () => {
-    chrome.tabs.query({ currentWindow: true }, (result) => {
-      tabs = result;
+  const update = () => {
+    chrome.windows.getCurrent({}, (result) => {
+      currentWindow = result;
+    });
+    chrome.windows.getAll({}, (result) => {
+      windows = result;
     });
   };
 
   // メッセージリスナーを設定
   const messageListener = (message: any) => {
     if (message.type === "TAB_CHANGED") {
-      updateTabs();
+      update();
     }
   };
 
   onMount(() => {
     // 現在のタブ一覧を取得して初期化
-    updateTabs();
+    update();
     // メッセージリスナーを登録
     chrome.runtime.onMessage.addListener(messageListener);
   });
 </script>
 
 <main>
+  <h1>Tabs</h1>
   <div class="container-tabs">
-    <h2>Tabs</h2>
-    <ul>
-      {#each tabs as tab (tab.id)}
-        <li animate:flip={{ duration: 400 }}>
-          <ItemTab {tab} {tabs} />
-        </li>
-      {/each}
-    </ul>
+    {#each windows as window (window.id)}
+      <Window {window} isCurrent={window.id == currentWindow.id} />
+    {/each}
   </div>
 </main>
-
-<style>
-  .container-tabs {
-    padding: 2rem 4rem;
-  }
-
-  .container-tabs ul {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin: 0;
-    padding: 0;
-  }
-
-  .container-tabs ul > li {
-    display: block;
-    margin: 0;
-    padding: 0;
-    width: 300px;
-  }
-</style>
