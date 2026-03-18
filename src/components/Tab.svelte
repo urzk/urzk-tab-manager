@@ -64,15 +64,27 @@
     }
   };
 
+  const moveTabToAnotherWindow = (windowId: number) => {
+    if (!tab.id) {
+      console.error("error: Unset tab ID");
+    } else {
+      chrome.tabs.move(tab.id, { index: -1, windowId });
+    }
+  };
+
+  const moveTabToCurrentWindow = () => {
+    chrome.windows.getCurrent((window) => {
+      window.id && moveTabToAnotherWindow(window.id);
+    });
+  };
+
   const swapTab = (tab1: chrome.tabs.Tab, tab2: chrome.tabs.Tab) => {
     const index1 = tab1.index;
     const index2 = tab2.index;
-    if (!tab1.id || !tab2.id) {
-      console.error("error: Unset tab ID");
-    } else {
-      chrome.tabs.move(tab1.id, { index: index2 });
-      chrome.tabs.move(tab2.id, { index: index1 });
-    }
+    tab1.id &&
+      chrome.tabs.move(tab1.id, { index: index2 }, () => {
+        tab2.id && chrome.tabs.move(tab2.id, { index: index1 });
+      });
   };
 
   const moveTabVerticalShift = 4;
@@ -121,6 +133,16 @@
     on:click={closeTab}
   >
     &cross;
+  </div>
+  <!-- move to current window -->
+  <div
+    class="tab-button tab-button-up tab-button-to-current"
+    class:tab-button-active={tab.index < moveTabVerticalShift}
+    role="button"
+    tabindex="-1"
+    on:click={moveTabToCurrentWindow}
+  >
+    &uparrow;
   </div>
   <div
     class="tab-button tab-button-up"

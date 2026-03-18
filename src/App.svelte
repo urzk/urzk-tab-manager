@@ -1,7 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { flip } from "svelte/animate";
-  import ItemTab from "./components/ItemTab.svelte";
   import Window from "./components/Window.svelte";
 
   let currentWindow: chrome.windows.Window;

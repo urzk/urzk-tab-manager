@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { flip } from "svelte/animate";
-  import ItemTab from "./ItemTab.svelte";
+  import Tab from "./Tab.svelte";
 
   export let window: chrome.windows.Window;
   export let isCurrent: boolean = false;
@@ -29,6 +29,12 @@
     isHidden = !isHidden;
   };
 
+  const allDiscard = () => {
+    tabs.forEach((tab) => {
+      if (tab.id) chrome.tabs.discard(tab.id);
+    });
+  };
+
   onMount(() => {
     updateTabs();
     chrome.runtime.onMessage.addListener(messageListener);
@@ -39,12 +45,12 @@
   <h2 id={window.id}>
     <a href={"#" + window.id} on:click={toggleWindow}
       >{isCurrent ? "Current " : ""}Window (ID: #{window.id}, {tabs.length} tabs)</a
-    >
+    ><span on:click={allDiscard}>All discard</span>
   </h2>
   <ul class:is-hidden={isHidden}>
     {#each tabs as tab (tab.id)}
       <li animate:flip={{ duration: 400 }}>
-        <ItemTab {tab} {tabs} />
+        <Tab {tab} {tabs} />
       </li>
     {/each}
   </ul>
