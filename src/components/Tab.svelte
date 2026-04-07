@@ -149,7 +149,7 @@
   </div>
   <!-- move to current window -->
   <div
-    title="move to last in current window"
+    title="move to last into current window"
     class="tab-button tab-button-to-current tab-button-active"
     role="button"
     tabindex="-1"
