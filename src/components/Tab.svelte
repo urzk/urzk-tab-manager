@@ -1,4 +1,14 @@
 <script lang="ts">
+  import { FontAwesomeIcon } from "@fortawesome/svelte-fontawesome";
+  import {
+    faArrowUp,
+    faArrowDown,
+    faArrowLeft,
+    faArrowRight,
+    faMinus,
+    faXmark,
+  } from "@fortawesome/free-solid-svg-icons";
+
   export let tab: chrome.tabs.Tab;
   export let tabs: chrome.tabs.Tab[];
   export let isCurrent: boolean;
@@ -126,7 +136,7 @@
     tabindex="-1"
     on:click={discardTab}
   >
-    &minus;
+    <FontAwesomeIcon icon={faMinus} />
   </div>
   <div
     title="close tab"
@@ -135,7 +145,7 @@
     tabindex="-1"
     on:click={closeTab}
   >
-    &cross;
+    <FontAwesomeIcon icon={faXmark} />
   </div>
   <!-- move to current window -->
   <div
@@ -145,7 +155,11 @@
     tabindex="-1"
     on:click={moveTabToCurrentWindow}
   >
-    {isCurrent ? "↓" : "↑"}
+    {#if isCurrent}
+      <FontAwesomeIcon icon={faArrowDown} />
+    {:else}
+      <FontAwesomeIcon icon={faArrowUp} />
+    {/if}
   </div>
   <div
     title="move up"
@@ -155,7 +169,7 @@
     tabindex="-1"
     on:click={moveTabToUp}
   >
-    &uparrow;
+    <FontAwesomeIcon icon={faArrowUp} />
   </div>
   <div
     title="move left"
@@ -165,7 +179,7 @@
     tabindex="-1"
     on:click={moveTabToLeft}
   >
-    &leftarrow;
+    <FontAwesomeIcon icon={faArrowLeft} />
   </div>
   <div
     title="move right"
@@ -175,7 +189,7 @@
     tabindex="-1"
     on:click={moveTabToRight}
   >
-    &rightarrow;
+    <FontAwesomeIcon icon={faArrowRight} />
   </div>
   <div
     title="move down"
@@ -185,7 +199,7 @@
     tabindex="-1"
     on:click={moveTabToDown}
   >
-    &downarrow;
+    <FontAwesomeIcon icon={faArrowDown} />
   </div>
   <div
     class="tab-container"
@@ -212,7 +226,7 @@
   }
 
   .tab-container {
-    background-color: aliceblue;
+    background-color: #eee;
     border-radius: 0.25rem;
     color: black;
     cursor: pointer;
@@ -229,9 +243,9 @@
     position: absolute;
     width: 20px;
     height: 20px;
-    background-color: #000;
-    color: white;
-    font-size: 20px;
+    background-color: #111;
+    color: #eee;
+    font-size: 16px;
     line-height: 1;
     text-align: center;
     transition: opacity 0.5s ease;
@@ -239,7 +253,8 @@
   }
 
   .tab-button-active {
-    display: block;
+    display: flex;
+    align-items: center;
   }
 
   .tab:hover > .tab-button {
