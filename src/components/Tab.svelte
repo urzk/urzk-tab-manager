@@ -119,6 +119,7 @@
 
 <div class="tab" id={tab.id}>
   <div
+    title="discard tab"
     class="tab-button tab-button-discard"
     class:tab-button-active={!tab.discarded}
     role="button"
@@ -128,6 +129,7 @@
     &minus;
   </div>
   <div
+    title="close tab"
     class="tab-button tab-button-close tab-button-active"
     role="button"
     tabindex="-1"
@@ -137,6 +139,7 @@
   </div>
   <!-- move to current window -->
   <div
+    title="move to last in current window"
     class="tab-button tab-button-to-current tab-button-active"
     role="button"
     tabindex="-1"
@@ -145,6 +148,7 @@
     {isCurrent ? "↓" : "↑"}
   </div>
   <div
+    title="move up"
     class="tab-button tab-button-up"
     class:tab-button-active={tab.index >= moveTabVerticalShift}
     role="button"
@@ -154,6 +158,7 @@
     &uparrow;
   </div>
   <div
+    title="move left"
     class="tab-button tab-button-left"
     class:tab-button-active={tab.index > 0}
     role="button"
@@ -163,6 +168,7 @@
     &leftarrow;
   </div>
   <div
+    title="move right"
     class="tab-button tab-button-right"
     class:tab-button-active={tab.index < tabs.length - 1}
     role="button"
@@ -172,6 +178,7 @@
     &rightarrow;
   </div>
   <div
+    title="move down"
     class="tab-button tab-button-down"
     class:tab-button-active={tab.index < tabs.length - moveTabVerticalShift}
     role="button"
