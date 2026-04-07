@@ -226,7 +226,7 @@
   }
 
   .tab-container {
-    background-color: #eee;
+    background-color: #ddd;
     border-radius: 0.25rem;
     color: black;
     cursor: pointer;
@@ -244,7 +244,7 @@
     width: 20px;
     height: 20px;
     background-color: #111;
-    color: #eee;
+    color: #ddd;
     font-size: 16px;
     line-height: 1;
     text-align: center;

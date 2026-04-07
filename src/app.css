@@ -4,7 +4,7 @@
 
 body {
   background-color: #222;
-  color: white;
+  color: #eee;
 }
 
 main {
@@ -40,5 +40,5 @@ main {
 }
 
 h2 a {
-  color: white;
+  color: #eee;
 }
