@@ -6,3 +6,39 @@ body {
   background-color: #222;
   color: white;
 }
+
+main {
+  padding: 2rem 4rem;
+}
+
+.container-tabs {
+  display: flex;
+  flex-direction: column;
+}
+
+.container-tabs ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+}
+
+.container-tabs .is-hidden {
+  display: none;
+}
+
+.container-tabs ul > li {
+  display: block;
+  margin: 0;
+  padding: 0;
+  width: 300px;
+}
+
+.window-current {
+  order: -1;
+}
+
+h2 a {
+  color: white;
+}

@@ -1,6 +1,7 @@
 <script lang="ts">
   export let tab: chrome.tabs.Tab;
   export let tabs: chrome.tabs.Tab[];
+  export let isCurrent: boolean;
 
   const selectTab = () => {
     if (!tab.id) {
@@ -64,15 +65,27 @@
     }
   };
 
+  const moveTabToAnotherWindow = (windowId: number) => {
+    if (!tab.id) {
+      console.error("error: Unset tab ID");
+    } else {
+      chrome.tabs.move(tab.id, { index: -1, windowId });
+    }
+  };
+
+  const moveTabToCurrentWindow = () => {
+    chrome.windows.getCurrent((window) => {
+      window.id && moveTabToAnotherWindow(window.id);
+    });
+  };
+
   const swapTab = (tab1: chrome.tabs.Tab, tab2: chrome.tabs.Tab) => {
     const index1 = tab1.index;
     const index2 = tab2.index;
-    if (!tab1.id || !tab2.id) {
-      console.error("error: Unset tab ID");
-    } else {
-      chrome.tabs.move(tab1.id, { index: index2 });
-      chrome.tabs.move(tab2.id, { index: index1 });
-    }
+    tab1.id &&
+      chrome.tabs.move(tab1.id, { index: index2 }, () => {
+        tab2.id && chrome.tabs.move(tab2.id, { index: index1 });
+      });
   };
 
   const moveTabVerticalShift = 4;
@@ -115,12 +128,21 @@
     &minus;
   </div>
   <div
-    class="tab-button tab-button-active tab-button-close"
+    class="tab-button tab-button-close tab-button-active"
     role="button"
     tabindex="-1"
     on:click={closeTab}
   >
     &cross;
+  </div>
+  <!-- move to current window -->
+  <div
+    class="tab-button tab-button-to-current tab-button-active"
+    role="button"
+    tabindex="-1"
+    on:click={moveTabToCurrentWindow}
+  >
+    {isCurrent ? "↓" : "↑"}
   </div>
   <div
     class="tab-button tab-button-up"
@@ -215,6 +237,13 @@
 
   .tab:hover > .tab-button {
     opacity: 1;
+  }
+
+  .tab-button-to-current {
+    border-radius: 100px;
+    transform: translate(50%, 50%);
+    bottom: 0;
+    right: 0;
   }
 
   .tab-button-discard {
