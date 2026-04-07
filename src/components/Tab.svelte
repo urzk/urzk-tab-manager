@@ -1,6 +1,7 @@
 <script lang="ts">
   export let tab: chrome.tabs.Tab;
   export let tabs: chrome.tabs.Tab[];
+  export let isCurrent: boolean;
 
   const selectTab = () => {
     if (!tab.id) {
@@ -127,7 +128,7 @@
     &minus;
   </div>
   <div
-    class="tab-button tab-button-active tab-button-close"
+    class="tab-button tab-button-close tab-button-active"
     role="button"
     tabindex="-1"
     on:click={closeTab}
@@ -136,13 +137,12 @@
   </div>
   <!-- move to current window -->
   <div
-    class="tab-button tab-button-up tab-button-to-current"
-    class:tab-button-active={tab.index < moveTabVerticalShift}
+    class="tab-button tab-button-to-current tab-button-active"
     role="button"
     tabindex="-1"
     on:click={moveTabToCurrentWindow}
   >
-    &uparrow;
+    {isCurrent ? "↓" : "↑"}
   </div>
   <div
     class="tab-button tab-button-up"
@@ -237,6 +237,13 @@
 
   .tab:hover > .tab-button {
     opacity: 1;
+  }
+
+  .tab-button-to-current {
+    border-radius: 100px;
+    transform: translate(50%, 50%);
+    bottom: 0;
+    right: 0;
   }
 
   .tab-button-discard {

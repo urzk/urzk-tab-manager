@@ -50,7 +50,7 @@
   <ul class:is-hidden={isHidden}>
     {#each tabs as tab (tab.id)}
       <li animate:flip={{ duration: 400 }}>
-        <Tab {tab} {tabs} />
+        <Tab {tab} {tabs} {isCurrent} />
       </li>
     {/each}
   </ul>
