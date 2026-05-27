@@ -3,6 +3,9 @@
   import { flip } from "svelte/animate";
   import Tab from "./Tab.svelte";
 
+  import { FontAwesomeIcon } from "@fortawesome/svelte-fontawesome";
+  import { faSquareMinus } from "@fortawesome/free-regular-svg-icons";
+
   export let window: chrome.windows.Window;
   export let isCurrent: boolean = false;
 
@@ -45,7 +48,9 @@
   <h2 id={window.id}>
     <a href={"#" + window.id} on:click={toggleWindow}
       >{isCurrent ? "Current " : ""}Window (ID: #{window.id}, {tabs.length} tabs)</a
-    ><span on:click={allDiscard}>All discard</span>
+    >&nbsp;<span title="discard all tabs in this window" on:click={allDiscard}
+      ><FontAwesomeIcon icon={faSquareMinus} /></span
+    >
   </h2>
   <ul class:is-hidden={isHidden}>
     {#each tabs as tab (tab.id)}
