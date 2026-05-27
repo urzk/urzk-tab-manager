@@ -6,22 +6,22 @@
   import { FontAwesomeIcon } from "@fortawesome/svelte-fontawesome";
   import { faSquareMinus } from "@fortawesome/free-regular-svg-icons";
 
-  export let window: chrome.windows.Window;
+  export let windowId: number;
   export let isCurrent: boolean = false;
 
   let tabs: chrome.tabs.Tab[] = [];
   let isHidden: boolean = !isCurrent;
 
-  const updateTabs = () => {
-    chrome.tabs.query({ windowId: window.id }, (result) => {
-      tabs = result;
-    });
-  };
-
   const messageListener = (message: any) => {
-    if (message.type === "TAB_CHANGED") {
+    if (message.windowId === windowId) {
       updateTabs();
     }
+  };
+
+  const updateTabs = () => {
+    chrome.tabs.query({ windowId }, (result) => {
+      tabs = result;
+    });
   };
 
   const openWindow = () => {
@@ -39,15 +39,18 @@
   };
 
   onMount(() => {
-    updateTabs();
     chrome.runtime.onMessage.addListener(messageListener);
+    updateTabs();
+    return () => {
+      chrome.runtime.onMessage.removeListener(messageListener);
+    };
   });
 </script>
 
-<div class:window-current={isCurrent} tabindex={isCurrent ? "1" : "0"}>
-  <h2 id={window.id}>
-    <a href={"#" + window.id} on:click={toggleWindow}
-      >{isCurrent ? "Current " : ""}Window (ID: #{window.id}, {tabs.length} tabs)</a
+<div class:window-current={isCurrent}>
+  <h2 id={`window-${windowId}`}>
+    <a href={`#window-${windowId}`} on:click={toggleWindow}
+      >{isCurrent ? "Current " : ""}Window (ID: #{windowId}, {tabs.length} tabs)</a
     >&nbsp;<span title="discard all tabs in this window" on:click={allDiscard}
       ><FontAwesomeIcon icon={faSquareMinus} /></span
     >

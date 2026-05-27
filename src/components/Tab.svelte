@@ -127,7 +127,7 @@
   };
 </script>
 
-<div class="tab" id={tab.id}>
+<div class="tab" id={`tab-${tab.id}`}>
   <div
     title="discard tab"
     class="tab-button tab-button-discard"
