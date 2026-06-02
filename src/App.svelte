@@ -40,7 +40,9 @@
   <h1>Tabs</h1>
   <div class="container-tabs">
     {#if currentWindowId}
-      <Window windowId={currentWindowId} isCurrent />
+      {#key currentWindowId}
+        <Window windowId={currentWindowId} isCurrent />
+      {/key}
     {/if}
     {#each windowIds as id (id)}
       {#if id && id !== currentWindowId}
