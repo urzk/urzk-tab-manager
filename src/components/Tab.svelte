@@ -131,7 +131,7 @@
 <div class="tab" id={`tab-${tab.id}`}>
   <TabButton
     title="discard tab"
-    className="tab-button-discard"
+    position="topleft"
     isActive={!tab.discarded}
     onClick={discardTab}
   >
@@ -139,7 +139,7 @@
   </TabButton>
   <TabButton
     title="close tab"
-    className="tab-button-close"
+    position="topright"
     isActive={true}
     onClick={closeTab}
   >
@@ -148,7 +148,7 @@
   <!-- move to current window -->
   <TabButton
     title="move to last into current window"
-    className="tab-button-to-current"
+    position="bottomright"
     isActive={!isCurrent || tab.id !== tabs[tabs.length - 1].id}
     onClick={moveTabToCurrentWindow}
   >
@@ -161,7 +161,7 @@
 
   <TabButton
     title="move up"
-    className="tab-button-up"
+    position="top"
     isActive={tab.index >= moveTabVerticalShift}
     onClick={moveTabToUp}
   >
@@ -170,7 +170,7 @@
 
   <TabButton
     title="move left"
-    className="tab-button-left"
+    position="left"
     isActive={tab.index > 0}
     onClick={moveTabToLeft}
   >
@@ -178,7 +178,7 @@
   </TabButton>
   <TabButton
     title="move right"
-    className="tab-button-right"
+    position="right"
     isActive={tab.index < tabs.length - 1}
     onClick={moveTabToRight}
   >
@@ -186,7 +186,7 @@
   </TabButton>
   <TabButton
     title="move down"
-    className="tab-button-down"
+    position="bottom"
     isActive={tab.index < tabs.length - moveTabVerticalShift}
     onClick={moveTabToDown}
   >

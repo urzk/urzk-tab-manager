@@ -1,13 +1,13 @@
 <script lang="ts">
   export let title: string;
-  export let className: string;
+  export let position: string;
   export let isActive: boolean;
   export let onClick: () => void;
 </script>
 
 <div
   {title}
-  class={`tab-button ${className}`}
+  class={`tab-button tab-button-${position}`}
   class:tab-button-active={isActive}
   role="button"
   tabindex="-1"
@@ -42,28 +42,35 @@
     opacity: 1;
   }
 
-  .tab-button-to-current {
-    border-radius: 100px;
-    transform: translate(50%, 50%);
-    bottom: 0;
-    right: 0;
-  }
-
-  .tab-button-discard {
+  .tab-button-topleft {
     border-radius: 100px;
     transform: translate(-50%, -50%);
     top: 0;
     left: 0;
   }
 
-  .tab-button-close {
+  .tab-button-topright {
     border-radius: 100px;
     transform: translate(50%, -50%);
     top: 0;
     right: 0;
   }
 
-  .tab-button-up {
+  .tab-button-bottomleft {
+    border-radius: 100px;
+    transform: translate(50%, 50%);
+    bottom: 0;
+    right: 0;
+  }
+
+  .tab-button-bottomright {
+    border-radius: 100px;
+    transform: translate(50%, 50%);
+    bottom: 0;
+    right: 0;
+  }
+
+  .tab-button-top {
     transform: translate(-50%, -50%);
     top: 0.25rem;
     left: 50%;
@@ -81,7 +88,7 @@
     right: 0.25rem;
   }
 
-  .tab-button-down {
+  .tab-button-bottom {
     transform: translate(-50%, 50%);
     bottom: 0.25rem;
     left: 50%;
