@@ -148,19 +148,21 @@
     <FontAwesomeIcon icon={faXmark} />
   </div>
   <!-- move to current window -->
-  <div
-    title="move to last into current window"
-    class="tab-button tab-button-to-current tab-button-active"
-    role="button"
-    tabindex="-1"
-    on:click={moveTabToCurrentWindow}
-  >
-    {#if isCurrent}
-      <FontAwesomeIcon icon={faArrowDown} />
-    {:else}
-      <FontAwesomeIcon icon={faArrowUp} />
-    {/if}
-  </div>
+  {#if !isCurrent || tab.id !== tabs[tabs.length - 1].id}
+    <div
+      title="move to last into current window"
+      class="tab-button tab-button-to-current tab-button-active"
+      role="button"
+      tabindex="-1"
+      on:click={moveTabToCurrentWindow}
+    >
+      {#if isCurrent}
+        <FontAwesomeIcon icon={faArrowDown} />
+      {:else}
+        <FontAwesomeIcon icon={faArrowUp} />
+      {/if}
+    </div>
+  {/if}
   <div
     title="move up"
     class="tab-button tab-button-up"
