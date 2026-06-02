@@ -20,6 +20,7 @@
       console.error("error: Unset tab ID");
     } else {
       chrome.tabs.update(tab.id, { active: true });
+      chrome.windows.update(tab.windowId, { focused: true });
     }
   };
 
