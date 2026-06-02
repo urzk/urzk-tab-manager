@@ -8,6 +8,7 @@
     faMinus,
     faXmark,
   } from "@fortawesome/free-solid-svg-icons";
+  import TabButton from "./TabButton.svelte";
 
   export let tab: chrome.tabs.Tab;
   export let tabs: chrome.tabs.Tab[];
@@ -128,81 +129,69 @@
 </script>
 
 <div class="tab" id={`tab-${tab.id}`}>
-  <div
+  <TabButton
     title="discard tab"
-    class="tab-button tab-button-discard"
-    class:tab-button-active={!tab.discarded}
-    role="button"
-    tabindex="-1"
-    on:click={discardTab}
+    className="tab-button-discard"
+    isActive={!tab.discarded}
+    onClick={discardTab}
   >
     <FontAwesomeIcon icon={faMinus} />
-  </div>
-  <div
+  </TabButton>
+  <TabButton
     title="close tab"
-    class="tab-button tab-button-close tab-button-active"
-    role="button"
-    tabindex="-1"
-    on:click={closeTab}
+    className="tab-button-close"
+    isActive={true}
+    onClick={closeTab}
   >
     <FontAwesomeIcon icon={faXmark} />
-  </div>
+  </TabButton>
   <!-- move to current window -->
-  {#if !isCurrent || tab.id !== tabs[tabs.length - 1].id}
-    <div
-      title="move to last into current window"
-      class="tab-button tab-button-to-current tab-button-active"
-      role="button"
-      tabindex="-1"
-      on:click={moveTabToCurrentWindow}
-    >
-      {#if isCurrent}
-        <FontAwesomeIcon icon={faArrowDown} />
-      {:else}
-        <FontAwesomeIcon icon={faArrowUp} />
-      {/if}
-    </div>
-  {/if}
-  <div
+  <TabButton
+    title="move to last into current window"
+    className="tab-button-to-current"
+    isActive={!isCurrent || tab.id !== tabs[tabs.length - 1].id}
+    onClick={moveTabToCurrentWindow}
+  >
+    {#if isCurrent}
+      <FontAwesomeIcon icon={faArrowDown} />
+    {:else}
+      <FontAwesomeIcon icon={faArrowUp} />
+    {/if}
+  </TabButton>
+
+  <TabButton
     title="move up"
-    class="tab-button tab-button-up"
-    class:tab-button-active={tab.index >= moveTabVerticalShift}
-    role="button"
-    tabindex="-1"
-    on:click={moveTabToUp}
+    className="tab-button-up"
+    isActive={tab.index >= moveTabVerticalShift}
+    onClick={moveTabToUp}
   >
     <FontAwesomeIcon icon={faArrowUp} />
-  </div>
-  <div
+  </TabButton>
+
+  <TabButton
     title="move left"
-    class="tab-button tab-button-left"
-    class:tab-button-active={tab.index > 0}
-    role="button"
-    tabindex="-1"
-    on:click={moveTabToLeft}
+    className="tab-button-left"
+    isActive={tab.index > 0}
+    onClick={moveTabToLeft}
   >
     <FontAwesomeIcon icon={faArrowLeft} />
-  </div>
-  <div
+  </TabButton>
+  <TabButton
     title="move right"
-    class="tab-button tab-button-right"
-    class:tab-button-active={tab.index < tabs.length - 1}
-    role="button"
-    tabindex="-1"
-    on:click={moveTabToRight}
+    className="tab-button-right"
+    isActive={tab.index < tabs.length - 1}
+    onClick={moveTabToRight}
   >
     <FontAwesomeIcon icon={faArrowRight} />
-  </div>
-  <div
+  </TabButton>
+  <TabButton
     title="move down"
-    class="tab-button tab-button-down"
-    class:tab-button-active={tab.index < tabs.length - moveTabVerticalShift}
-    role="button"
-    tabindex="-1"
-    on:click={moveTabToDown}
+    className="tab-button-down"
+    isActive={tab.index < tabs.length - moveTabVerticalShift}
+    onClick={moveTabToDown}
   >
     <FontAwesomeIcon icon={faArrowDown} />
-  </div>
+  </TabButton>
   <div
     class="tab-container"
     class:tab-container-discarded={tab.discarded}
@@ -220,9 +209,6 @@
 </div>
 
 <style>
-  .tab-container-discarded {
-    opacity: 0.5;
-  }
   .tab {
     position: relative;
   }
@@ -238,73 +224,8 @@
     padding: 1rem;
   }
 
-  .tab-button {
-    cursor: pointer;
-    display: none;
-    opacity: 0;
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    background-color: #111;
-    color: #ddd;
-    font-size: 16px;
-    line-height: 1;
-    text-align: center;
-    transition: opacity 0.5s ease;
-    z-index: 100;
-  }
-
-  .tab-button-active {
-    display: flex;
-    align-items: center;
-  }
-
-  .tab:hover > .tab-button {
-    opacity: 1;
-  }
-
-  .tab-button-to-current {
-    border-radius: 100px;
-    transform: translate(50%, 50%);
-    bottom: 0;
-    right: 0;
-  }
-
-  .tab-button-discard {
-    border-radius: 100px;
-    transform: translate(-50%, -50%);
-    top: 0;
-    left: 0;
-  }
-
-  .tab-button-close {
-    border-radius: 100px;
-    transform: translate(50%, -50%);
-    top: 0;
-    right: 0;
-  }
-
-  .tab-button-up {
-    transform: translate(-50%, -50%);
-    top: 0.25rem;
-    left: 50%;
-  }
-  .tab-button-left {
-    transform: translate(-50%, -50%);
-    top: 50%;
-    left: 0.25rem;
-  }
-
-  .tab-button-right {
-    transform: translate(50%, -50%);
-    top: 50%;
-    right: 0.25rem;
-  }
-
-  .tab-button-down {
-    transform: translate(-50%, 50%);
-    bottom: 0.25rem;
-    left: 50%;
+  .tab-container-discarded {
+    opacity: 0.5;
   }
 
   .tab-favicon {
