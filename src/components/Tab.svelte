@@ -6,6 +6,7 @@
     faArrowLeft,
     faArrowRight,
     faMinus,
+    faUpRightFromSquare,
     faXmark,
   } from "@fortawesome/free-solid-svg-icons";
   import TabButton from "./TabButton.svelte";
@@ -126,6 +127,14 @@
   const moveTabToRight = () => {
     moveTab(1);
   };
+
+  const popOutToNewWindow = () => {
+    if (!tab.id) {
+      console.error("error: Unset tab ID");
+    } else {
+      chrome.windows.create({ tabId: tab.id });
+    }
+  };
 </script>
 
 <div class="tab" id={`tab-${tab.id}`}>
@@ -145,9 +154,16 @@
   >
     <FontAwesomeIcon icon={faXmark} />
   </TabButton>
-  <!-- move to current window -->
   <TabButton
-    title="move to last into current window"
+    title="pop out to new window"
+    position="bottomleft"
+    isActive={true}
+    onClick={popOutToNewWindow}
+  >
+    <FontAwesomeIcon icon={faUpRightFromSquare} />
+  </TabButton>
+  <TabButton
+    title="move to end of current window"
     position="bottomright"
     isActive={!isCurrent || tab.id !== tabs[tabs.length - 1].id}
     onClick={moveTabToCurrentWindow}
