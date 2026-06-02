@@ -43,28 +43,28 @@
   }
 
   .tab-button-topleft {
-    border-radius: 100px;
+    border-radius: 10px;
     transform: translate(-50%, -50%);
     top: 0;
     left: 0;
   }
 
   .tab-button-topright {
-    border-radius: 100px;
+    border-radius: 10px;
     transform: translate(50%, -50%);
     top: 0;
     right: 0;
   }
 
   .tab-button-bottomleft {
-    border-radius: 100px;
+    border-radius: 5px;
     transform: translate(-50%, 50%);
     bottom: 0;
     left: 0;
   }
 
   .tab-button-bottomright {
-    border-radius: 100px;
+    border-radius: 10px;
     transform: translate(50%, 50%);
     bottom: 0;
     right: 0;
