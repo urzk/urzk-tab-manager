@@ -9,7 +9,8 @@
   const messageListener = (message: any) => {
     if (
       message.type === "WINDOW_CREATED" ||
-      message.type === "WINDOW_REMOVED"
+      message.type === "WINDOW_REMOVED" ||
+      (message.type === "TAB_DETACHED" && message.windowId === currentWindowId)
     ) {
       updateWindows();
     }
