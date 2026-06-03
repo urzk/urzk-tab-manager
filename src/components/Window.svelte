@@ -14,7 +14,7 @@
   let isHidden: boolean = !isCurrent;
   let width: number = 0;
 
-  const tabWidth = 300;
+  const tabWidth = 288;
   const tabGap = 16;
 
   $: columns = Math.floor((width + tabGap) / (tabWidth + tabGap));
