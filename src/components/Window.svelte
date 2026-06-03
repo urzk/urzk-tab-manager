@@ -5,6 +5,7 @@
 
   import { FontAwesomeIcon } from "@fortawesome/svelte-fontawesome";
   import { faSquareMinus } from "@fortawesome/free-regular-svg-icons";
+  import { faCaretDown, faCaretRight } from "@fortawesome/free-solid-svg-icons";
 
   export let windowId: number;
   export let isCurrent: boolean = false;
@@ -47,9 +48,16 @@
   });
 </script>
 
-<div class:window-current={isCurrent}>
+<div>
   <h2 id={`window-${windowId}`}>
-    <a href={`#window-${windowId}`} on:click={toggleWindow}
+    <div class="window-toggle" on:click={toggleWindow}>
+      {#if isHidden}
+        <FontAwesomeIcon icon={faCaretRight} />
+      {:else}
+        <FontAwesomeIcon icon={faCaretDown} />
+      {/if}
+    </div>
+    <a href={`#window-${windowId}`} on:click={openWindow}
       >{isCurrent ? "Current " : ""}Window (ID: #{windowId}, {tabs.length} tabs)</a
     >&nbsp;<span title="discard all tabs in this window" on:click={allDiscard}
       ><FontAwesomeIcon icon={faSquareMinus} /></span
@@ -63,3 +71,22 @@
     {/each}
   </ul>
 </div>
+
+<style>
+  h2 {
+    margin: 1rem 0;
+    position: relative;
+    scroll-margin-top: 1rem;
+  }
+
+  h2 a {
+    color: #eee;
+  }
+
+  .window-toggle {
+    position: absolute;
+    left: -1.5rem;
+    top: 0rem;
+    cursor: pointer;
+  }
+</style>

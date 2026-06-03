@@ -34,11 +34,3 @@ main {
   padding: 0;
   width: 300px;
 }
-
-.window-current {
-  order: -1;
-}
-
-h2 a {
-  color: #eee;
-}
