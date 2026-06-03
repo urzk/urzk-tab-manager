@@ -263,9 +263,7 @@
   }
   .tab-url {
     margin: 0;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1;
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
