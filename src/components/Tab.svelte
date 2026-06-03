@@ -6,18 +6,22 @@
     faArrowLeft,
     faArrowRight,
     faMinus,
+    faUpRightFromSquare,
     faXmark,
   } from "@fortawesome/free-solid-svg-icons";
+  import TabButton from "./TabButton.svelte";
 
   export let tab: chrome.tabs.Tab;
   export let tabs: chrome.tabs.Tab[];
   export let isCurrent: boolean;
+  export let columns: number;
 
   const selectTab = () => {
     if (!tab.id) {
       console.error("error: Unset tab ID");
     } else {
       chrome.tabs.update(tab.id, { active: true });
+      chrome.windows.update(tab.windowId, { focused: true });
     }
   };
 
@@ -98,13 +102,11 @@
       });
   };
 
-  const moveTabVerticalShift = 4;
-
   const moveTabToUp = () => {
     if (!tab.id) {
       console.error("error: Unset tab ID");
     } else {
-      const newIndex = tab.index - moveTabVerticalShift;
+      const newIndex = tab.index - columns;
       checkIndex(newIndex) && swapTab(tab, tabs[newIndex]);
     }
   };
@@ -113,7 +115,7 @@
     if (!tab.id) {
       console.error("error: Unset tab ID");
     } else {
-      const newIndex = tab.index + moveTabVerticalShift;
+      const newIndex = tab.index + columns;
       checkIndex(newIndex) && swapTab(tab, tabs[newIndex]);
     }
   };
@@ -125,82 +127,87 @@
   const moveTabToRight = () => {
     moveTab(1);
   };
+
+  const popOutToNewWindow = () => {
+    if (!tab.id) {
+      console.error("error: Unset tab ID");
+    } else {
+      chrome.windows.create({ tabId: tab.id });
+    }
+  };
 </script>
 
 <div class="tab" id={`tab-${tab.id}`}>
-  <div
+  <TabButton
     title="discard tab"
-    class="tab-button tab-button-discard"
-    class:tab-button-active={!tab.discarded}
-    role="button"
-    tabindex="-1"
-    on:click={discardTab}
+    position="topleft"
+    isActive={!tab.discarded}
+    onClick={discardTab}
   >
     <FontAwesomeIcon icon={faMinus} />
-  </div>
-  <div
+  </TabButton>
+  <TabButton
     title="close tab"
-    class="tab-button tab-button-close tab-button-active"
-    role="button"
-    tabindex="-1"
-    on:click={closeTab}
+    position="topright"
+    isActive={true}
+    onClick={closeTab}
   >
     <FontAwesomeIcon icon={faXmark} />
-  </div>
-  <!-- move to current window -->
-  <div
-    title="move to last into current window"
-    class="tab-button tab-button-to-current tab-button-active"
-    role="button"
-    tabindex="-1"
-    on:click={moveTabToCurrentWindow}
+  </TabButton>
+  <TabButton
+    title="pop out to new window"
+    position="bottomleft"
+    isActive={true}
+    onClick={popOutToNewWindow}
+  >
+    <FontAwesomeIcon icon={faUpRightFromSquare} />
+  </TabButton>
+  <TabButton
+    title="move to end of current window"
+    position="bottomright"
+    isActive={!isCurrent || tab.id !== tabs[tabs.length - 1].id}
+    onClick={moveTabToCurrentWindow}
   >
     {#if isCurrent}
       <FontAwesomeIcon icon={faArrowDown} />
     {:else}
       <FontAwesomeIcon icon={faArrowUp} />
     {/if}
-  </div>
-  <div
+  </TabButton>
+
+  <TabButton
     title="move up"
-    class="tab-button tab-button-up"
-    class:tab-button-active={tab.index >= moveTabVerticalShift}
-    role="button"
-    tabindex="-1"
-    on:click={moveTabToUp}
+    position="top"
+    isActive={tab.index >= columns}
+    onClick={moveTabToUp}
   >
     <FontAwesomeIcon icon={faArrowUp} />
-  </div>
-  <div
+  </TabButton>
+
+  <TabButton
     title="move left"
-    class="tab-button tab-button-left"
-    class:tab-button-active={tab.index > 0}
-    role="button"
-    tabindex="-1"
-    on:click={moveTabToLeft}
+    position="left"
+    isActive={tab.index > 0}
+    onClick={moveTabToLeft}
   >
     <FontAwesomeIcon icon={faArrowLeft} />
-  </div>
-  <div
+  </TabButton>
+  <TabButton
     title="move right"
-    class="tab-button tab-button-right"
-    class:tab-button-active={tab.index < tabs.length - 1}
-    role="button"
-    tabindex="-1"
-    on:click={moveTabToRight}
+    position="right"
+    isActive={tab.index < tabs.length - 1}
+    onClick={moveTabToRight}
   >
     <FontAwesomeIcon icon={faArrowRight} />
-  </div>
-  <div
+  </TabButton>
+  <TabButton
     title="move down"
-    class="tab-button tab-button-down"
-    class:tab-button-active={tab.index < tabs.length - moveTabVerticalShift}
-    role="button"
-    tabindex="-1"
-    on:click={moveTabToDown}
+    position="bottom"
+    isActive={tab.index < tabs.length - columns}
+    onClick={moveTabToDown}
   >
     <FontAwesomeIcon icon={faArrowDown} />
-  </div>
+  </TabButton>
   <div
     class="tab-container"
     class:tab-container-discarded={tab.discarded}
@@ -218,9 +225,6 @@
 </div>
 
 <style>
-  .tab-container-discarded {
-    opacity: 0.5;
-  }
   .tab {
     position: relative;
   }
@@ -236,73 +240,8 @@
     padding: 1rem;
   }
 
-  .tab-button {
-    cursor: pointer;
-    display: none;
-    opacity: 0;
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    background-color: #111;
-    color: #ddd;
-    font-size: 16px;
-    line-height: 1;
-    text-align: center;
-    transition: opacity 0.5s ease;
-    z-index: 100;
-  }
-
-  .tab-button-active {
-    display: flex;
-    align-items: center;
-  }
-
-  .tab:hover > .tab-button {
-    opacity: 1;
-  }
-
-  .tab-button-to-current {
-    border-radius: 100px;
-    transform: translate(50%, 50%);
-    bottom: 0;
-    right: 0;
-  }
-
-  .tab-button-discard {
-    border-radius: 100px;
-    transform: translate(-50%, -50%);
-    top: 0;
-    left: 0;
-  }
-
-  .tab-button-close {
-    border-radius: 100px;
-    transform: translate(50%, -50%);
-    top: 0;
-    right: 0;
-  }
-
-  .tab-button-up {
-    transform: translate(-50%, -50%);
-    top: 0.25rem;
-    left: 50%;
-  }
-  .tab-button-left {
-    transform: translate(-50%, -50%);
-    top: 50%;
-    left: 0.25rem;
-  }
-
-  .tab-button-right {
-    transform: translate(50%, -50%);
-    top: 50%;
-    right: 0.25rem;
-  }
-
-  .tab-button-down {
-    transform: translate(-50%, 50%);
-    bottom: 0.25rem;
-    left: 50%;
+  .tab-container-discarded {
+    opacity: 0.5;
   }
 
   .tab-favicon {
@@ -323,9 +262,7 @@
   }
   .tab-url {
     margin: 0;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1;
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }

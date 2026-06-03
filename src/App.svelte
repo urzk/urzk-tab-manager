@@ -9,7 +9,8 @@
   const messageListener = (message: any) => {
     if (
       message.type === "WINDOW_CREATED" ||
-      message.type === "WINDOW_REMOVED"
+      message.type === "WINDOW_REMOVED" ||
+      (message.type === "TAB_DETACHED" && message.windowId === currentWindowId) // for Tab Manager tab moved to another existing window
     ) {
       updateWindows();
     }
@@ -40,7 +41,9 @@
   <h1>Tabs</h1>
   <div class="container-tabs">
     {#if currentWindowId}
-      <Window windowId={currentWindowId} isCurrent />
+      {#key currentWindowId}
+        <Window windowId={currentWindowId} isCurrent />
+      {/key}
     {/if}
     {#each windowIds as id (id)}
       {#if id && id !== currentWindowId}
