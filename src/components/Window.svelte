@@ -4,7 +4,7 @@
   import Tab from "./Tab.svelte";
 
   import { FontAwesomeIcon } from "@fortawesome/svelte-fontawesome";
-  import { faSquareMinus } from "@fortawesome/free-regular-svg-icons";
+  import { faEye, faSquareMinus } from "@fortawesome/free-regular-svg-icons";
   import { faCaretDown, faCaretRight } from "@fortawesome/free-solid-svg-icons";
 
   export let windowId: number;
@@ -23,6 +23,10 @@
     chrome.tabs.query({ windowId }, (result) => {
       tabs = result;
     });
+  };
+
+  const focusWindow = () => {
+    chrome.windows.update(windowId, { focused: true });
   };
 
   const openWindow = () => {
@@ -61,6 +65,8 @@
       >{isCurrent ? "Current " : ""}Window (ID: #{windowId}, {tabs.length} tabs)</a
     >&nbsp;<span title="discard all tabs in this window" on:click={allDiscard}
       ><FontAwesomeIcon icon={faSquareMinus} /></span
+    ><span title="focus window" on:click={focusWindow}
+      ><FontAwesomeIcon icon={faEye} /></span
     >
   </h2>
   <ul class:is-hidden={isHidden}>
