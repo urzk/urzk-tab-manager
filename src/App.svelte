@@ -10,7 +10,7 @@
     if (
       message.type === "WINDOW_CREATED" ||
       message.type === "WINDOW_REMOVED" ||
-      (message.type === "TAB_DETACHED" && message.windowId === currentWindowId)
+      (message.type === "TAB_DETACHED" && message.windowId === currentWindowId) // for Tab Manager tab moved to another existing window
     ) {
       updateWindows();
     }
