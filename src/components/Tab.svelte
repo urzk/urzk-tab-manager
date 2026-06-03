@@ -14,6 +14,7 @@
   export let tab: chrome.tabs.Tab;
   export let tabs: chrome.tabs.Tab[];
   export let isCurrent: boolean;
+  export let columns: number;
 
   const selectTab = () => {
     if (!tab.id) {
@@ -101,13 +102,11 @@
       });
   };
 
-  const moveTabVerticalShift = 4;
-
   const moveTabToUp = () => {
     if (!tab.id) {
       console.error("error: Unset tab ID");
     } else {
-      const newIndex = tab.index - moveTabVerticalShift;
+      const newIndex = tab.index - columns;
       checkIndex(newIndex) && swapTab(tab, tabs[newIndex]);
     }
   };
@@ -116,7 +115,7 @@
     if (!tab.id) {
       console.error("error: Unset tab ID");
     } else {
-      const newIndex = tab.index + moveTabVerticalShift;
+      const newIndex = tab.index + columns;
       checkIndex(newIndex) && swapTab(tab, tabs[newIndex]);
     }
   };
@@ -179,7 +178,7 @@
   <TabButton
     title="move up"
     position="top"
-    isActive={tab.index >= moveTabVerticalShift}
+    isActive={tab.index >= columns}
     onClick={moveTabToUp}
   >
     <FontAwesomeIcon icon={faArrowUp} />
@@ -204,7 +203,7 @@
   <TabButton
     title="move down"
     position="bottom"
-    isActive={tab.index < tabs.length - moveTabVerticalShift}
+    isActive={tab.index < tabs.length - columns}
     onClick={moveTabToDown}
   >
     <FontAwesomeIcon icon={faArrowDown} />

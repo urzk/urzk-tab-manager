@@ -12,6 +12,12 @@
 
   let tabs: chrome.tabs.Tab[] = [];
   let isHidden: boolean = !isCurrent;
+  let width: number = 0;
+
+  const tabWidth = 300;
+  const tabGap = 16;
+
+  $: columns = Math.floor((width + tabGap) / (tabWidth + tabGap));
 
   const messageListener = (message: any) => {
     if (message.windowId === windowId) {
@@ -62,17 +68,18 @@
       {/if}
     </div>
     <a href={`#window-${windowId}`} on:click={openWindow}
-      >{isCurrent ? "Current " : ""}Window (ID: #{windowId}, {tabs.length} tabs)</a
+      >{isCurrent ? "Current " : ""}Window (ID: #{windowId}, {tabs.length}
+      tabs)</a
     >&nbsp;<span title="discard all tabs in this window" on:click={allDiscard}
       ><FontAwesomeIcon icon={faSquareMinus} /></span
     ><span title="focus window" on:click={focusWindow}
       ><FontAwesomeIcon icon={faEye} /></span
     >
   </h2>
-  <ul class:is-hidden={isHidden}>
+  <ul class:is-hidden={isHidden} bind:clientWidth={width}>
     {#each tabs as tab (tab.id)}
       <li animate:flip={{ duration: 400 }}>
-        <Tab {tab} {tabs} {isCurrent} />
+        <Tab {tab} {tabs} {isCurrent} {columns} />
       </li>
     {/each}
   </ul>
