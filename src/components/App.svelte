@@ -6,6 +6,16 @@
   let windowIds: (number | undefined)[] = [];
   let inputValue: string = "";
 
+  const getQuery = (value: string) => {
+    const words = value.trim().split(/\s+/).filter(Boolean);
+    if (words.length === 0) {
+      return undefined;
+    }
+    return "*" + words.join("*") + "*";
+  };
+
+  $: query = getQuery(inputValue);
+
   // メッセージリスナーを設定
   const messageListener = (message: any) => {
     if (
@@ -51,12 +61,12 @@
   <div class="container-tabs">
     {#if currentWindowId}
       {#key currentWindowId}
-        <Window windowId={currentWindowId} query={inputValue} isCurrent />
+        <Window windowId={currentWindowId} {query} isCurrent />
       {/key}
     {/if}
     {#each windowIds as id (id)}
       {#if id && id !== currentWindowId}
-        <Window windowId={id} query={inputValue} />
+        <Window windowId={id} {query} />
       {/if}
     {/each}
   </div>

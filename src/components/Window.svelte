@@ -13,7 +13,7 @@
 
   export let windowId: number;
   export let isCurrent: boolean = false;
-  export let query: string = "";
+  export let query: string | undefined = undefined;
 
   let tabs: chrome.tabs.Tab[] = [];
   let isHidden: boolean = !isCurrent;
