@@ -24,6 +24,7 @@
   const tabGap = 16;
 
   $: columns = Math.floor((width + tabGap) / (tabWidth + tabGap));
+  $: hasQuery = !!query;
 
   const messageListener = (message: any) => {
     if (message.windowId === windowId) {
@@ -91,7 +92,7 @@
   <ul class:is-hidden={isHidden} bind:clientWidth={width}>
     {#each tabs as tab (tab.id)}
       <li animate:flip={{ duration: 400 }}>
-        <Tab {tab} {tabs} {isCurrent} {columns} />
+        <Tab {tab} {tabs} {isCurrent} {columns} {hasQuery} />
       </li>
     {/each}
   </ul>
