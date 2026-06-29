@@ -32,6 +32,8 @@
     });
   };
 
+  $: query, updateTabs();
+
   const focusWindow = () => {
     chrome.windows.update(windowId, { focused: true });
   };

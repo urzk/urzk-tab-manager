@@ -4,6 +4,7 @@
 
   let currentWindowId: number | undefined;
   let windowIds: (number | undefined)[] = [];
+  let inputValue: string = "";
 
   // メッセージリスナーを設定
   const messageListener = (message: any) => {
@@ -38,17 +39,27 @@
 </script>
 
 <main>
-  <h1>Tabs</h1>
+  <div class="head-container">
+    <h1>Tabs</h1>
+    <input type="text" placeholder="Search tabs..." bind:value={inputValue} />
+  </div>
   <div class="container-tabs">
     {#if currentWindowId}
       {#key currentWindowId}
-        <Window windowId={currentWindowId} isCurrent />
+        <Window windowId={currentWindowId} query={inputValue} isCurrent />
       {/key}
     {/if}
     {#each windowIds as id (id)}
       {#if id && id !== currentWindowId}
-        <Window windowId={id} />
+        <Window windowId={id} query={inputValue} />
       {/if}
     {/each}
   </div>
 </main>
+
+<style>
+  .head-container {
+    display: flex;
+    align-items: center;
+  }
+</style>
