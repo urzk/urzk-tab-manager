@@ -9,6 +9,7 @@
 
   export let windowId: number;
   export let isCurrent: boolean = false;
+  export let query: string = "";
 
   let tabs: chrome.tabs.Tab[] = [];
   let isHidden: boolean = !isCurrent;
@@ -26,7 +27,7 @@
   };
 
   const updateTabs = () => {
-    chrome.tabs.query({ windowId }, (result) => {
+    chrome.tabs.query({ windowId, title: query }, (result) => {
       tabs = result;
     });
   };
