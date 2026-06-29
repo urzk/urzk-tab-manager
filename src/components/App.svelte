@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import Window from "./components/Window.svelte";
+  import Window from "./Window.svelte";
 
   let currentWindowId: number | undefined;
   let windowIds: (number | undefined)[] = [];
