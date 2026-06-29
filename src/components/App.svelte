@@ -41,7 +41,12 @@
 <main>
   <div class="head-container">
     <h1>Tabs</h1>
-    <input type="text" placeholder="Search tabs..." bind:value={inputValue} />
+    <input
+      class="search-input"
+      type="text"
+      placeholder="Search tabs..."
+      bind:value={inputValue}
+    />
   </div>
   <div class="container-tabs">
     {#if currentWindowId}
@@ -61,5 +66,15 @@
   .head-container {
     display: flex;
     align-items: center;
+  }
+  .search-input {
+    border: 0;
+    border-radius: 16px;
+    background-color: #ddd;
+    font-size: 16px;
+    line-height: 1.5;
+    margin-left: 16px;
+    outline: none;
+    padding: 4px 16px;
   }
 </style>
