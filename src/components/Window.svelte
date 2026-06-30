@@ -5,19 +5,26 @@
 
   import { FontAwesomeIcon } from "@fortawesome/svelte-fontawesome";
   import { faEye, faSquareMinus } from "@fortawesome/free-regular-svg-icons";
-  import { faCaretDown, faCaretRight } from "@fortawesome/free-solid-svg-icons";
+  import {
+    faCaretDown,
+    faCaretRight,
+    faSpinner,
+  } from "@fortawesome/free-solid-svg-icons";
 
   export let windowId: number;
   export let isCurrent: boolean = false;
+  export let query: { discarded?: boolean; url?: string[]; title?: string };
 
   let tabs: chrome.tabs.Tab[] = [];
   let isHidden: boolean = !isCurrent;
   let width: number = 0;
+  let isLoading: boolean = true;
 
   const tabWidth = 288;
   const tabGap = 16;
 
   $: columns = Math.floor((width + tabGap) / (tabWidth + tabGap));
+  $: hasQuery = Object.keys(query).length !== 0;
 
   const messageListener = (message: any) => {
     if (message.windowId === windowId) {
@@ -25,11 +32,18 @@
     }
   };
 
-  const updateTabs = () => {
-    chrome.tabs.query({ windowId }, (result) => {
-      tabs = result;
-    });
+  const updateTabs = async () => {
+    isLoading = true;
+    try {
+      tabs = await chrome.tabs.query({ windowId, ...query });
+    } catch (e) {
+      console.error(e);
+      tabs = [];
+    }
+    isLoading = false;
   };
+
+  $: query, updateTabs();
 
   const focusWindow = () => {
     chrome.windows.update(windowId, { focused: true });
@@ -68,8 +82,12 @@
       {/if}
     </div>
     <a href={`#window-${windowId}`} on:click={openWindow}
-      >{isCurrent ? "Current " : ""}Window (ID: #{windowId}, {tabs.length}
-      tabs)</a
+      >{isCurrent ? "Current " : ""}Window (ID: #{windowId},
+      {#if isLoading}
+        <FontAwesomeIcon icon={faSpinner} spin />
+      {:else}
+        {tabs.length} tabs
+      {/if})</a
     >&nbsp;<span title="discard all tabs in this window" on:click={allDiscard}
       ><FontAwesomeIcon icon={faSquareMinus} /></span
     ><span title="focus window" on:click={focusWindow}
@@ -79,7 +97,7 @@
   <ul class:is-hidden={isHidden} bind:clientWidth={width}>
     {#each tabs as tab (tab.id)}
       <li animate:flip={{ duration: 400 }}>
-        <Tab {tab} {tabs} {isCurrent} {columns} />
+        <Tab {tab} {tabs} {isCurrent} {columns} {hasQuery} />
       </li>
     {/each}
   </ul>

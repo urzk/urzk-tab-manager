@@ -11,10 +11,11 @@
   } from "@fortawesome/free-solid-svg-icons";
   import TabButton from "./TabButton.svelte";
 
+  export let columns: number;
+  export let hasQuery: boolean = false;
+  export let isCurrent: boolean;
   export let tab: chrome.tabs.Tab;
   export let tabs: chrome.tabs.Tab[];
-  export let isCurrent: boolean;
-  export let columns: number;
 
   const selectTab = () => {
     if (!tab.id) {
@@ -178,7 +179,7 @@
   <TabButton
     title="move up"
     position="top"
-    isActive={tab.index >= columns}
+    isActive={!hasQuery && tab.index >= columns}
     onClick={moveTabToUp}
   >
     <FontAwesomeIcon icon={faArrowUp} />
@@ -187,7 +188,7 @@
   <TabButton
     title="move left"
     position="left"
-    isActive={tab.index > 0}
+    isActive={!hasQuery && tab.index > 0}
     onClick={moveTabToLeft}
   >
     <FontAwesomeIcon icon={faArrowLeft} />
@@ -195,7 +196,7 @@
   <TabButton
     title="move right"
     position="right"
-    isActive={tab.index < tabs.length - 1}
+    isActive={!hasQuery && tab.index < tabs.length - 1}
     onClick={moveTabToRight}
   >
     <FontAwesomeIcon icon={faArrowRight} />
@@ -203,7 +204,7 @@
   <TabButton
     title="move down"
     position="bottom"
-    isActive={tab.index < tabs.length - columns}
+    isActive={!hasQuery && tab.index < tabs.length - columns}
     onClick={moveTabToDown}
   >
     <FontAwesomeIcon icon={faArrowDown} />
