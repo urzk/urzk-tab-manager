@@ -13,7 +13,7 @@
 
   export let windowId: number;
   export let isCurrent: boolean = false;
-  export let query: string | undefined = undefined;
+  export let query: { discarded?: boolean; url?: string[]; title?: string };
 
   let tabs: chrome.tabs.Tab[] = [];
   let isHidden: boolean = !isCurrent;
@@ -24,7 +24,7 @@
   const tabGap = 16;
 
   $: columns = Math.floor((width + tabGap) / (tabWidth + tabGap));
-  $: hasQuery = !!query;
+  $: hasQuery = Object.keys(query).length !== 0;
 
   const messageListener = (message: any) => {
     if (message.windowId === windowId) {
@@ -34,7 +34,12 @@
 
   const updateTabs = async () => {
     isLoading = true;
-    tabs = await chrome.tabs.query({ windowId, title: query });
+    try {
+      tabs = await chrome.tabs.query({ windowId, ...query });
+    } catch (e) {
+      console.error(e);
+      tabs = [];
+    }
     isLoading = false;
   };
 

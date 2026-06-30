@@ -7,11 +7,34 @@
   let inputValue: string = "";
 
   const getQuery = (value: string) => {
-    const words = value.trim().split(/\s+/).filter(Boolean);
-    if (words.length === 0) {
-      return undefined;
+    let query: { discarded?: boolean; url?: string[]; title?: string } = {};
+    if (!value) {
+      return query;
     }
-    return "*" + words.join("*") + "*";
+
+    const matchWord = (word: string) => {
+      if (!word) {
+        return false;
+      } else if (word === "loaded:" || word === "l:") {
+        query.discarded = false;
+        return false;
+      } else {
+        const match = word.match(/^site:(.+)$/);
+        if (match) {
+          query.url = ["*://" + match[1] + "/*", "*://*." + match[1] + "/*"];
+          return false;
+        } else {
+          return true;
+        }
+      }
+    };
+
+    const words = value.trim().split(/\s+/).filter(matchWord);
+    if (words.length !== 0) {
+      query.title = "*" + words.join("*") + "*";
+    }
+
+    return query;
   };
 
   $: query = getQuery(inputValue);
