@@ -15,7 +15,7 @@
     faRectangleXmark,
   } from "@fortawesome/free-solid-svg-icons";
 
-  export let windowId: number;
+  export let window: chrome.windows.Window;
   export let isCurrent: boolean = false;
   export let query: { discarded?: boolean; url?: string[]; title?: string };
 
@@ -27,6 +27,7 @@
   const tabWidth = 288;
   const tabGap = 16;
 
+  $: windowId = window.id as number;
   $: columns = Math.floor((width + tabGap) / (tabWidth + tabGap));
   $: hasQuery = Object.keys(query).length !== 0;
 
