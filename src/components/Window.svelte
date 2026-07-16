@@ -4,11 +4,15 @@
   import Tab from "./Tab.svelte";
 
   import { FontAwesomeIcon } from "@fortawesome/svelte-fontawesome";
-  import { faEye, faSquareMinus } from "@fortawesome/free-regular-svg-icons";
+  import {
+    faWindowMaximize,
+    faWindowMinimize,
+  } from "@fortawesome/free-regular-svg-icons";
   import {
     faCaretDown,
     faCaretRight,
     faSpinner,
+    faRectangleXmark,
   } from "@fortawesome/free-solid-svg-icons";
 
   export let windowId: number;
@@ -47,6 +51,14 @@
 
   const focusWindow = () => {
     chrome.windows.update(windowId, { focused: true });
+  };
+
+  const minimizeWindow = () => {
+    chrome.windows.update(windowId, { state: "minimized" });
+  };
+
+  const closeWindow = () => {
+    chrome.windows.remove(windowId);
   };
 
   const openWindow = () => {
@@ -88,10 +100,12 @@
       {:else}
         {tabs.length} tabs
       {/if})</a
-    >&nbsp;<span title="discard all tabs in this window" on:click={allDiscard}
-      ><FontAwesomeIcon icon={faSquareMinus} /></span
-    ><span title="focus window" on:click={focusWindow}
-      ><FontAwesomeIcon icon={faEye} /></span
+    >&nbsp;<small title="minimize window" on:click={minimizeWindow}
+      ><FontAwesomeIcon icon={faWindowMinimize} /></small
+    ><small title="focus window" on:click={focusWindow}
+      ><FontAwesomeIcon icon={faWindowMaximize} /></small
+    ><small title="close window" on:click={closeWindow}
+      ><FontAwesomeIcon icon={faRectangleXmark} /></small
     >
   </h2>
   <ul class:is-hidden={isHidden} bind:clientWidth={width}>
