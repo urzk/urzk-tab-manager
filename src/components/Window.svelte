@@ -5,14 +5,12 @@
 
   import { FontAwesomeIcon } from "@fortawesome/svelte-fontawesome";
   import {
-    faWindowMaximize,
-    faWindowMinimize,
-  } from "@fortawesome/free-regular-svg-icons";
-  import {
     faCaretDown,
     faCaretRight,
     faSpinner,
     faRectangleXmark,
+    faWindowMaximize,
+    faWindowMinimize,
   } from "@fortawesome/free-solid-svg-icons";
 
   export let window: chrome.windows.Window;
