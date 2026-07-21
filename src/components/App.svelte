@@ -45,6 +45,7 @@
   const messageListener = (message: any) => {
     if (
       message.type === "WINDOW_CREATED" ||
+      message.type === "WINDOW_FOCUS_CHANGED" ||
       message.type === "WINDOW_REMOVED" ||
       (message.type === "TAB_DETACHED" && message.windowId === currentWindowId) // for Tab Manager tab moved to another existing window
     ) {
@@ -58,6 +59,7 @@
       currentWindow = result;
     });
     chrome.windows.getAll({}, (result) => {
+      console.log("updateWindows", result);
       windows = result;
     });
   };
