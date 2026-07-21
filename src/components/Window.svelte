@@ -4,14 +4,16 @@
   import Tab from "./Tab.svelte";
 
   import { FontAwesomeIcon } from "@fortawesome/svelte-fontawesome";
-  import { faEye, faSquareMinus } from "@fortawesome/free-regular-svg-icons";
   import {
     faCaretDown,
     faCaretRight,
     faSpinner,
+    faRectangleXmark,
+    faWindowMaximize,
+    faWindowMinimize,
   } from "@fortawesome/free-solid-svg-icons";
 
-  export let windowId: number;
+  export let window: chrome.windows.Window;
   export let isCurrent: boolean = false;
   export let query: { discarded?: boolean; url?: string[]; title?: string };
 
@@ -23,6 +25,7 @@
   const tabWidth = 288;
   const tabGap = 16;
 
+  $: windowId = window.id as number;
   $: columns = Math.floor((width + tabGap) / (tabWidth + tabGap));
   $: hasQuery = Object.keys(query).length !== 0;
 
@@ -47,6 +50,14 @@
 
   const focusWindow = () => {
     chrome.windows.update(windowId, { focused: true });
+  };
+
+  const minimizeWindow = () => {
+    chrome.windows.update(windowId, { state: "minimized" });
+  };
+
+  const closeWindow = () => {
+    chrome.windows.remove(windowId);
   };
 
   const openWindow = () => {
@@ -88,11 +99,19 @@
       {:else}
         {tabs.length} tabs
       {/if})</a
-    >&nbsp;<span title="discard all tabs in this window" on:click={allDiscard}
-      ><FontAwesomeIcon icon={faSquareMinus} /></span
-    ><span title="focus window" on:click={focusWindow}
-      ><FontAwesomeIcon icon={faEye} /></span
-    >
+    >&nbsp;
+    <div class="window-buttons">
+      {#if window.state !== "minimized"}
+        <small title="minimize window" on:click={minimizeWindow}
+          ><FontAwesomeIcon icon={faWindowMinimize} /></small
+        >
+      {/if}
+      <small title="focus window" on:click={focusWindow}
+        ><FontAwesomeIcon icon={faWindowMaximize} /></small
+      ><small title="close window" on:click={closeWindow}
+        ><FontAwesomeIcon icon={faRectangleXmark} /></small
+      >
+    </div>
   </h2>
   <ul class:is-hidden={isHidden} bind:clientWidth={width}>
     {#each tabs as tab (tab.id)}
@@ -119,5 +138,10 @@
     left: -1.5rem;
     top: 0rem;
     cursor: pointer;
+  }
+
+  .window-buttons {
+    display: inline-flex;
+    align-items: center;
   }
 </style>

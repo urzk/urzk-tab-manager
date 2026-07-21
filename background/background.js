@@ -2,6 +2,10 @@ chrome.windows.onCreated.addListener((window) => {
   chrome.runtime.sendMessage({ type: "WINDOW_CREATED" });
 });
 
+chrome.windows.onFocusChanged.addListener((windowId) => {
+  chrome.runtime.sendMessage({ type: "WINDOW_FOCUS_CHANGED" });
+});
+
 chrome.windows.onRemoved.addListener((windowId) => {
   chrome.runtime.sendMessage({ type: "WINDOW_REMOVED" });
 });

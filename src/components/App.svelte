@@ -2,9 +2,11 @@
   import { onMount } from "svelte";
   import Window from "./Window.svelte";
 
-  let currentWindowId: number | undefined;
-  let windowIds: (number | undefined)[] = [];
+  let currentWindow: chrome.windows.Window | undefined;
+  let windows: (chrome.windows.Window | undefined)[] = [];
   let inputValue: string = "";
+
+  $: currentWindowId = currentWindow?.id;
 
   const getQuery = (value: string) => {
     let query: { discarded?: boolean; url?: string[]; title?: string } = {};
@@ -43,6 +45,7 @@
   const messageListener = (message: any) => {
     if (
       message.type === "WINDOW_CREATED" ||
+      message.type === "WINDOW_FOCUS_CHANGED" ||
       message.type === "WINDOW_REMOVED" ||
       (message.type === "TAB_DETACHED" && message.windowId === currentWindowId) // for Tab Manager tab moved to another existing window
     ) {
@@ -53,10 +56,11 @@
   // タブ情報を更新する関数
   const updateWindows = () => {
     chrome.windows.getCurrent({}, (result) => {
-      currentWindowId = result.id;
+      currentWindow = result;
     });
     chrome.windows.getAll({}, (result) => {
-      windowIds = result.map((w) => w.id);
+      console.log("updateWindows", result);
+      windows = result;
     });
   };
 
@@ -82,14 +86,14 @@
     />
   </div>
   <div class="container-tabs">
-    {#if currentWindowId}
-      {#key currentWindowId}
-        <Window windowId={currentWindowId} {query} isCurrent />
+    {#if currentWindow?.id}
+      {#key currentWindow?.id}
+        <Window window={currentWindow} {query} isCurrent />
       {/key}
     {/if}
-    {#each windowIds as id (id)}
-      {#if id && id !== currentWindowId}
-        <Window windowId={id} {query} />
+    {#each windows as window (window?.id)}
+      {#if window?.id && window.id !== currentWindowId}
+        <Window {window} {query} />
       {/if}
     {/each}
   </div>
