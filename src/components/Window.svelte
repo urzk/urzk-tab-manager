@@ -99,13 +99,19 @@
       {:else}
         {tabs.length} tabs
       {/if})</a
-    >&nbsp;<small title="minimize window" on:click={minimizeWindow}
-      ><FontAwesomeIcon icon={faWindowMinimize} /></small
-    ><small title="focus window" on:click={focusWindow}
-      ><FontAwesomeIcon icon={faWindowMaximize} /></small
-    ><small title="close window" on:click={closeWindow}
-      ><FontAwesomeIcon icon={faRectangleXmark} /></small
-    >
+    >&nbsp;
+    <div class="window-buttons">
+      {#if window.state !== "minimized"}
+        <small title="minimize window" on:click={minimizeWindow}
+          ><FontAwesomeIcon icon={faWindowMinimize} /></small
+        >
+      {/if}
+      <small title="focus window" on:click={focusWindow}
+        ><FontAwesomeIcon icon={faWindowMaximize} /></small
+      ><small title="close window" on:click={closeWindow}
+        ><FontAwesomeIcon icon={faRectangleXmark} /></small
+      >
+    </div>
   </h2>
   <ul class:is-hidden={isHidden} bind:clientWidth={width}>
     {#each tabs as tab (tab.id)}
@@ -132,5 +138,10 @@
     left: -1.5rem;
     top: 0rem;
     cursor: pointer;
+  }
+
+  .window-buttons {
+    display: inline-flex;
+    align-items: center;
   }
 </style>
