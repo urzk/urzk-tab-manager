@@ -274,6 +274,24 @@ describe("TabSync", () => {
     expect(vi.getTimerCount()).toBe(0);
   });
 
+  test("hidden before start stays dormant until visible", async () => {
+    const f = createFakeChrome(seed());
+    const getAll = vi.spyOn(f.windows, "getAll");
+    const listeners = countListeners(f);
+    const { sync, last } = make(f);
+    sync.setVisible(false);
+    await sync.start();
+    await vi.advanceTimersByTimeAsync(60_000);
+    expect(getAll).not.toHaveBeenCalled();
+    expect(listeners()).toBe(0);
+    expect(vi.getTimerCount()).toBe(0);
+    sync.setVisible(true);
+    await settle();
+    expect(getAll).toHaveBeenCalledTimes(1);
+    expect(listeners()).toBe(11);
+    expect(norm(last())).toEqual(normTruth(f));
+  });
+
   test("resyncs when becoming visible", async () => {
     const f = createFakeChrome(seed());
     const getAll = vi.spyOn(f.windows, "getAll");

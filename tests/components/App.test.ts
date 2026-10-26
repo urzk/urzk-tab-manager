@@ -221,6 +221,44 @@ describe("App", () => {
     expect(setVisible).not.toHaveBeenCalled();
   });
 
+  it("stays dormant when mounted hidden and syncs once visible", async () => {
+    const vis = vi.spyOn(document, "visibilityState", "get");
+    vis.mockReturnValue("hidden");
+    fake = createFakeChrome(twoByThree());
+    const getAll = vi.spyOn(fake.windows, "getAll");
+    sync = createTabSync(fake, { scheduleFrame: (cb) => setTimeout(cb, 0) });
+    const { container } = render(App, {
+      props: {
+        api: fake,
+        getURL: (p: string) => "chrome-extension://test" + p,
+        sync,
+      },
+    });
+    await new Promise((r) => setTimeout(r, 20));
+    expect(getAll).not.toHaveBeenCalled();
+    expect(section(container, 1)).toBeNull();
+    vis.mockReturnValue("visible");
+    document.dispatchEvent(new Event("visibilitychange"));
+    await waitFor(() => expect(section(container, 1)).not.toBeNull());
+    expect(getAll).toHaveBeenCalledTimes(1);
+  });
+
+  it("reconciles after each window action", async () => {
+    const { container } = setup({
+      windows: [{ tabs: [tab("alpha")] }, { tabs: [tab("beta")] }],
+    });
+    await waitFor(() => expect(section(container, 3)).not.toBeNull());
+    const reconcile = vi.spyOn(sync, "reconcileNow");
+    const w1 = within(section(container, 1)!);
+    const w3 = within(section(container, 3)!);
+    await fireEvent.click(w1.getByTitle(en.minimizeWindow.message));
+    await waitFor(() => expect(reconcile).toHaveBeenCalledTimes(1));
+    await fireEvent.click(w3.getByTitle(en.focusWindow.message));
+    await waitFor(() => expect(reconcile).toHaveBeenCalledTimes(2));
+    await fireEvent.click(w3.getByTitle(en.closeWindow.message));
+    await waitFor(() => expect(reconcile).toHaveBeenCalledTimes(3));
+  });
+
   it("only the hovered card renders actions", async () => {
     const { container } = setup();
     await waitFor(() =>

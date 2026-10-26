@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount, setContext, untrack } from "svelte";
-  import { createActions } from "../../lib/chrome/actions";
+  import { createActions, type Actions } from "../../lib/chrome/actions";
   import type { ChromeApi } from "../../lib/chrome/api";
   import { t } from "../../lib/i18n";
   import { parseQuery } from "../../lib/query";
@@ -29,7 +29,20 @@
   }));
 
   setContext("getURL", getURL);
-  const actions = createActions(api);
+  const base = createActions(api);
+  // Minimizing or focusing a window that is not focused fires no event;
+  // reconcile right after so the display does not wait for the interval.
+  const afterWindowAction =
+    (fn: (id: number) => Promise<void>) => async (id: number) => {
+      await fn(id);
+      await sync.reconcileNow();
+    };
+  const actions: Actions = {
+    ...base,
+    minimizeWindow: afterWindowAction(base.minimizeWindow),
+    focusWindow: afterWindowAction(base.focusWindow),
+    closeWindow: afterWindowAction(base.closeWindow),
+  };
 
   let tabState = $state.raw<State>(emptyState);
   let input = $state("");
@@ -57,6 +70,8 @@
     const unsubscribe = sync.subscribe((s) => {
       tabState = s;
     });
+    // a page opened or restored in the background must not go live
+    sync.setVisible(document.visibilityState === "visible");
     void sync.start();
     const onVisibility = () =>
       sync.setVisible(document.visibilityState === "visible");
