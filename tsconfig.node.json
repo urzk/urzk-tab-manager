@@ -6,6 +6,10 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "strict": true,
+    // only this project's types: a parent directory's node_modules/@types
+    // must not make the check pass locally while it fails in CI
+    "typeRoots": ["./node_modules/@types"],
+    "types": ["node"],
     "emitDeclarationOnly": true,
     "outDir": "./node_modules/.tmp/tsconfig.node"
   },
