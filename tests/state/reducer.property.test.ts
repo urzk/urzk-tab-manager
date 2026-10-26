@@ -18,16 +18,18 @@ import {
 
 type NormTab = {
   id: number;
+  windowId: number;
   title: string;
   url: string;
   pinned: boolean;
   discarded: boolean;
   active: boolean;
 };
-type NormWindow = { windowId: number; tabs: NormTab[] };
+type NormWindow = { windowId: number; focused: boolean; tabs: NormTab[] };
 
 const pick = (t: {
   id: number;
+  windowId: number;
   title: string;
   url: string;
   pinned: boolean;
@@ -35,6 +37,7 @@ const pick = (t: {
   active: boolean;
 }): NormTab => ({
   id: t.id,
+  windowId: t.windowId,
   title: t.title,
   url: t.url,
   pinned: t.pinned,
@@ -45,6 +48,7 @@ const pick = (t: {
 function normalizeState(s: State): NormWindow[] {
   return s.windowOrder.map((windowId) => ({
     windowId,
+    focused: s.windows.get(windowId)?.focused ?? false,
     tabs: (s.tabIdsByWindow.get(windowId) ?? []).map((id) => {
       const t = s.tabs.get(id);
       if (!t) throw new Error(`tab ${id} listed but missing`);
@@ -57,6 +61,7 @@ function normalizeState(s: State): NormWindow[] {
 function normalizeTruth(wins: chrome.windows.Window[]): NormWindow[] {
   return wins.map((w) => ({
     windowId: w.id!,
+    focused: !!w.focused,
     tabs: (w.tabs ?? []).map((t) => pick(toTabLite(t))),
   }));
 }
@@ -188,7 +193,8 @@ function run(f: FakeChrome, o: Op): Promise<unknown> | void {
     case "popOut":
       return f.windows.create({ tabId: t.id! });
     case "setTitle":
-      return f.setTitle(t.id!, o.title);
+      f.setTitle(t.id!, o.title); // synchronous; throws if the tab is gone
+      return Promise.resolve();
     case "discard":
       return f.tabs.discard(t.id!);
     case "activate":
@@ -199,6 +205,9 @@ function run(f: FakeChrome, o: Op): Promise<unknown> | void {
 }
 
 // ---- property -------------------------------------------------------------
+
+/** Op outcomes across all runs, so the property cannot silently go vacuous. */
+const outcomes = { executed: 0, rejected: 0, skipped: 0 };
 
 describe("reducer tracks the fake chrome", () => {
   afterEach(() => {
@@ -227,9 +236,15 @@ describe("reducer tracks the fake chrome", () => {
             expect(normalizeState(state)).toEqual(normalizeTruth(f.truth()));
             for (const o of ops) {
               try {
-                await run(f, o);
+                const p = run(f, o);
+                if (p === undefined) outcomes.skipped++;
+                else {
+                  await p;
+                  outcomes.executed++;
+                }
               } catch {
                 // the fake rejected the op (pin zone, missing window, ...): ignored
+                outcomes.rejected++;
               }
               f.flush();
               expect(normalizeState(state)).toEqual(normalizeTruth(f.truth()));
@@ -243,6 +258,12 @@ describe("reducer tracks the fake chrome", () => {
       ),
       { numRuns: 300 },
     );
+    const total = outcomes.executed + outcomes.rejected + outcomes.skipped;
+    // observed locally: ~91% executed, ~6% rejected, ~3% skipped
+    expect(
+      outcomes.executed / total,
+      `op outcomes ${JSON.stringify(outcomes)}`,
+    ).toBeGreaterThanOrEqual(0.6);
   });
 
   test("unsubscribe removes every listener", async () => {
