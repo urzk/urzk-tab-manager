@@ -24,28 +24,48 @@ if (run("git", ["status", "--porcelain"]).trim() !== "") {
   process.exit(1);
 }
 
+const pkgPath = resolve(root, "package.json");
+const changelogPath = resolve(root, "CHANGELOG.md");
+const origPkgText = readFileSync(pkgPath, "utf8");
+const origChangelog = readFileSync(changelogPath, "utf8");
+const pkg = JSON.parse(origPkgText);
+const version = bumpVersion(pkg.version, kind);
+const tag = `v${version}`;
+// Roll in memory first: it throws on an empty Unreleased section before the slow tests run.
+const rolled = rollChangelog(origChangelog, version, localDate());
+
 run("pnpm", ["test"], true);
 
-const pkgPath = resolve(root, "package.json");
-const pkg = JSON.parse(readFileSync(pkgPath, "utf8"));
-const version = bumpVersion(pkg.version, kind);
-const changelogPath = resolve(root, "CHANGELOG.md");
-// Roll first: it throws on an empty Unreleased section before anything is written.
-const rolled = rollChangelog(
-  readFileSync(changelogPath, "utf8"),
-  version,
-  localDate(),
-);
-
-pkg.version = version;
-writeFileSync(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`);
-writeFileSync(changelogPath, rolled);
-
-run("git", ["add", "package.json", "CHANGELOG.md"]);
-run("git", ["commit", "-m", `release: v${version}`], true);
-run("git", ["tag", "-a", `v${version}`, "-m", `v${version}`]);
+let committed = false;
+try {
+  pkg.version = version;
+  writeFileSync(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`);
+  writeFileSync(changelogPath, rolled);
+  run("git", ["add", "package.json", "CHANGELOG.md"]);
+  run("git", ["commit", "-m", `release: ${tag}`], true);
+  committed = true;
+  run("git", ["tag", "-a", tag, "-m", tag]);
+} catch (e) {
+  const msg = e instanceof Error ? e.message : String(e);
+  if (committed) {
+    console.error(`release commit was created but tagging failed: ${msg}`);
+    console.error(`to retry the tag:   git tag -a ${tag} -m ${tag}`);
+    console.error("to undo the commit: git reset --hard HEAD~1");
+  } else {
+    console.error(`release failed before the commit: ${msg}`);
+    writeFileSync(pkgPath, origPkgText);
+    writeFileSync(changelogPath, origChangelog);
+    try {
+      run("git", ["reset", "-q", "package.json", "CHANGELOG.md"]);
+    } catch {
+      // nothing staged or git unavailable; files are already restored
+    }
+    console.error("package.json and CHANGELOG.md were restored and unstaged");
+  }
+  process.exit(1);
+}
 process.stdout.write(
-  `released v${version}\npush with: git push && git push --tags\n`,
+  `released ${tag}\npush with: git push && git push --tags\n`,
 );
 
 function localDate() {
