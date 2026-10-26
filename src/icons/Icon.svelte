@@ -1,16 +1,12 @@
 <script lang="ts">
+  import { FontAwesomeIcon } from "@fortawesome/svelte-fontawesome";
   import { icons } from "./paths";
 
   let { name }: { name: keyof typeof icons } = $props();
-  const icon = $derived(icons[name]);
 </script>
 
-<svg
-  aria-hidden="true"
-  viewBox={icon.viewBox}
-  fill="currentColor"
-  width="1em"
-  height="1em"
->
-  <path d={icon.d} />
-</svg>
+<!-- FontAwesomeIcon renders its SVG once at mount and ignores later prop
+     changes, so remount it whenever the icon changes. -->
+{#key name}
+  <FontAwesomeIcon icon={icons[name]} />
+{/key}

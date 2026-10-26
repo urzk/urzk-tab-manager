@@ -20,7 +20,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Tab and window state is now event-driven, with a periodic reconcile to catch missed events.
 - Collapsed windows are not rendered, and hover actions are rendered only when needed, so large tab counts stay responsive.
-- Icons are rendered as inline SVG.
 - Rebuilt on Svelte 5 and Vite 8.
 - Favicons are loaded with `no-referrer` and fall back to Chrome's `_favicon` endpoint.
 
