@@ -1,13 +1,9 @@
 import fc from "fast-check";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import { subscribeEvents } from "../../src/lib/chrome/events";
-import {
-  emptyState,
-  toTabLite,
-  toWindowLite,
-  type State,
-} from "../../src/lib/state/model";
+import { emptyState, toTabLite, type State } from "../../src/lib/state/model";
 import { applyEvent } from "../../src/lib/state/reducer";
+import { fromSnapshot, reconcile } from "../../src/lib/state/reconcile";
 import {
   createFakeChrome,
   type FakeChrome,
@@ -66,31 +62,6 @@ function normalizeTruth(wins: chrome.windows.Window[]): NormWindow[] {
   }));
 }
 
-/** Local stand-in for Task 7's `fromSnapshot`: folds getAll output as events. */
-function stateFromGetAll(wins: chrome.windows.Window[]): State {
-  let s = emptyState;
-  for (const w of wins) {
-    s = applyEvent(s, { type: "windowCreated", window: toWindowLite(w) });
-    const tabs = [...(w.tabs ?? [])].sort((a, b) => a.index - b.index);
-    for (const t of tabs) {
-      s = applyEvent(s, {
-        type: "tabCreated",
-        tab: toTabLite(t),
-        index: t.index,
-      });
-    }
-    for (const t of tabs) {
-      if (t.active)
-        s = applyEvent(s, {
-          type: "tabActivated",
-          tabId: t.id!,
-          windowId: w.id!,
-        });
-    }
-  }
-  return s;
-}
-
 // ---- operations -----------------------------------------------------------
 
 type Op =
@@ -105,6 +76,7 @@ type Op =
   | { op: "focusWindow"; w: number }
   | { op: "pinToggle"; i: number }
   | { op: "createWindow" };
+type DropOp = { op: "drop"; k: number };
 
 const nat = fc.nat({ max: 1000 });
 const opArb: fc.Arbitrary<Op> = fc.oneof(
@@ -133,6 +105,19 @@ const opArb: fc.Arbitrary<Op> = fc.oneof(
   fc.record({ op: fc.constant("pinToggle" as const), i: nat }),
   fc.record({ op: fc.constant("createWindow" as const) }),
 );
+
+const dropArb: fc.Arbitrary<DropOp> = fc.record({
+  op: fc.constant("drop" as const),
+  k: fc.integer({ min: 1, max: 3 }),
+});
+
+// fast-check's default size averages ~6 ops; "max" makes lengths span 1..60
+const opsArb = fc.array(opArb, { minLength: 1, maxLength: 60, size: "max" });
+const opsWithDropsArb = fc.array(fc.oneof(opArb, dropArb), {
+  minLength: 1,
+  maxLength: 60,
+  size: "max",
+});
 
 const seedTabArb = fc.record({
   title: fc.string({ maxLength: 4 }),
@@ -216,46 +201,44 @@ describe("reducer tracks the fake chrome", () => {
 
   test("folded state equals the fake's truth after every op", async () => {
     await fc.assert(
-      fc.asyncProperty(
-        seedArb,
-        fc.array(opArb, { minLength: 1, maxLength: 60 }),
-        async (seed, ops) => {
-          const errors = vi
-            .spyOn(console, "error")
-            .mockImplementation(() => {});
-          const f = createFakeChrome(seed);
-          // manual delivery: every op's events are flushed synchronously after it
-          f.deliver = "manual";
-          let state: State = emptyState;
-          // subscribe before the snapshot; nothing is pending yet
-          const unsubscribe = subscribeEvents(f, (e) => {
-            state = applyEvent(state, e);
-          });
-          try {
-            state = stateFromGetAll(await f.windows.getAll({ populate: true }));
-            expect(normalizeState(state)).toEqual(normalizeTruth(f.truth()));
-            for (const o of ops) {
-              try {
-                const p = run(f, o);
-                if (p === undefined) outcomes.skipped++;
-                else {
-                  await p;
-                  outcomes.executed++;
-                }
-              } catch {
-                // the fake rejected the op (pin zone, missing window, ...): ignored
-                outcomes.rejected++;
+      fc.asyncProperty(seedArb, opsArb, async (seed, ops) => {
+        const errors = vi.spyOn(console, "error").mockImplementation(() => {});
+        const f = createFakeChrome(seed);
+        // manual delivery: every op's events are flushed synchronously after it
+        f.deliver = "manual";
+        let state: State = emptyState;
+        // subscribe before the snapshot; nothing is pending yet
+        const unsubscribe = subscribeEvents(f, (e) => {
+          state = applyEvent(state, e);
+        });
+        try {
+          state = fromSnapshot(
+            await f.windows.getAll({ populate: true }),
+            undefined,
+            undefined,
+          );
+          expect(normalizeState(state)).toEqual(normalizeTruth(f.truth()));
+          for (const o of ops) {
+            try {
+              const p = run(f, o);
+              if (p === undefined) outcomes.skipped++;
+              else {
+                await p;
+                outcomes.executed++;
               }
-              f.flush();
-              expect(normalizeState(state)).toEqual(normalizeTruth(f.truth()));
+            } catch {
+              // the fake rejected the op (pin zone, missing window, ...): ignored
+              outcomes.rejected++;
             }
-            expect(errors).not.toHaveBeenCalled();
-          } finally {
-            unsubscribe();
-            errors.mockRestore();
+            f.flush();
+            expect(normalizeState(state)).toEqual(normalizeTruth(f.truth()));
           }
-        },
-      ),
+          expect(errors).not.toHaveBeenCalled();
+        } finally {
+          unsubscribe();
+          errors.mockRestore();
+        }
+      }),
       { numRuns: 300 },
     );
     const total = outcomes.executed + outcomes.rejected + outcomes.skipped;
@@ -264,6 +247,69 @@ describe("reducer tracks the fake chrome", () => {
       outcomes.executed / total,
       `op outcomes ${JSON.stringify(outcomes)}`,
     ).toBeGreaterThanOrEqual(0.6);
+  });
+
+  test("reconcile converges after dropped events", async () => {
+    const lengths: number[] = [];
+    let diverged = 0;
+    await fc.assert(
+      fc.asyncProperty(seedArb, opsWithDropsArb, async (seed, ops) => {
+        lengths.push(ops.length);
+        const errors = vi.spyOn(console, "error").mockImplementation(() => {});
+        const f = createFakeChrome(seed);
+        f.deliver = "manual";
+        let state: State = emptyState;
+        const unsubscribe = subscribeEvents(f, (e) => {
+          state = applyEvent(state, e);
+        });
+        try {
+          state = fromSnapshot(
+            await f.windows.getAll({ populate: true }),
+            undefined,
+            undefined,
+          );
+          for (const o of ops) {
+            if (o.op === "drop") {
+              f.dropNextEvents(o.k);
+              continue;
+            }
+            try {
+              const p = run(f, o);
+              if (p !== undefined) await p;
+            } catch {
+              // rejected by the fake: ignored
+            }
+            f.flush();
+          }
+          // state may be arbitrarily wrong here; only the reconciled state counts
+          // the fake throws once the current window has been closed
+          const currentWindowId = await f.windows
+            .getCurrent()
+            .then((w) => w.id)
+            .catch(() => undefined);
+          const snap = fromSnapshot(
+            await f.windows.getAll({ populate: true }),
+            currentWindowId,
+            undefined,
+          );
+          const r = reconcile(state, snap);
+          if (r.mismatches > 0) diverged++;
+          expect(normalizeState(r.state)).toEqual(normalizeTruth(f.truth()));
+          const again = reconcile(r.state, snap);
+          expect(again.mismatches).toBe(0);
+          expect(again.state).toBe(r.state);
+          expect(errors).not.toHaveBeenCalled();
+        } finally {
+          unsubscribe();
+          errors.mockRestore();
+        }
+      }),
+      { numRuns: 300 },
+    );
+    // dropped events must actually leave the reducer state wrong in some runs
+    expect(diverged).toBeGreaterThan(0);
+    expect(Math.min(...lengths)).toBeLessThanOrEqual(5);
+    expect(Math.max(...lengths)).toBeGreaterThanOrEqual(50);
   });
 
   test("unsubscribe removes every listener", async () => {
