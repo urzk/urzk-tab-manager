@@ -162,8 +162,21 @@ describe("reconcile", () => {
       managerTabId: undefined,
     };
     const r = reconcile(local, snap);
+    expect(r.mismatches).toBe(1);
+    expect(r.state).not.toBe(local);
     expect(r.state.currentWindowId).toBe(7);
     expect(r.state.managerTabId).toBeUndefined();
+  });
+
+  test("counts a ctx-only difference as 1 mismatch", () => {
+    const local = stateOf([[1, 2]]);
+    const snap: State = { ...clone(local), managerTabId: 2 };
+    const r = reconcile(local, snap);
+    expect(r.mismatches).toBe(1);
+    expect(r.state).not.toBe(local);
+    expect(r.state.currentWindowId).toBe(snap.currentWindowId);
+    expect(r.state.managerTabId).toBe(2);
+    expect(r.state.tabs.get(1)).toBe(local.tabs.get(1));
   });
 
   test("does not mutate its inputs", () => {

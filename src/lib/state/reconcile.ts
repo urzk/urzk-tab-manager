@@ -110,10 +110,12 @@ export function reconcile(
   for (const id of snapshot.windowOrder)
     if (!local.windows.has(id)) mismatches++;
 
-  const sameCtx =
-    local.currentWindowId === snapshot.currentWindowId &&
-    local.managerTabId === snapshot.managerTabId;
-  if (mismatches === 0 && sameCtx) return { state: local, mismatches: 0 };
+  if (
+    local.currentWindowId !== snapshot.currentWindowId ||
+    local.managerTabId !== snapshot.managerTabId
+  )
+    mismatches++;
+  if (mismatches === 0) return { state: local, mismatches: 0 };
 
   return {
     state: {
