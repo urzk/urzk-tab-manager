@@ -76,7 +76,7 @@
       console.error("error: Unset tab ID");
     } else {
       const newIndex = tab.index + shift;
-      checkIndex(newIndex) && chrome.tabs.move(tab.id, { index: newIndex });
+      if (checkIndex(newIndex)) chrome.tabs.move(tab.id, { index: newIndex });
     }
   };
 
@@ -90,16 +90,16 @@
 
   const moveTabToCurrentWindow = () => {
     chrome.windows.getCurrent((window) => {
-      window.id && moveTabToAnotherWindow(window.id);
+      if (window.id) moveTabToAnotherWindow(window.id);
     });
   };
 
   const swapTab = (tab1: chrome.tabs.Tab, tab2: chrome.tabs.Tab) => {
     const index1 = tab1.index;
     const index2 = tab2.index;
-    tab1.id &&
+    if (tab1.id)
       chrome.tabs.move(tab1.id, { index: index2 }, () => {
-        tab2.id && chrome.tabs.move(tab2.id, { index: index1 });
+        if (tab2.id) chrome.tabs.move(tab2.id, { index: index1 });
       });
   };
 
@@ -108,7 +108,7 @@
       console.error("error: Unset tab ID");
     } else {
       const newIndex = tab.index - columns;
-      checkIndex(newIndex) && swapTab(tab, tabs[newIndex]);
+      if (checkIndex(newIndex)) swapTab(tab, tabs[newIndex]);
     }
   };
 
@@ -117,7 +117,7 @@
       console.error("error: Unset tab ID");
     } else {
       const newIndex = tab.index + columns;
-      checkIndex(newIndex) && swapTab(tab, tabs[newIndex]);
+      if (checkIndex(newIndex)) swapTab(tab, tabs[newIndex]);
     }
   };
 

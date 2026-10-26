@@ -29,7 +29,7 @@
   $: columns = Math.floor((width + tabGap) / (tabWidth + tabGap));
   $: hasQuery = Object.keys(query).length !== 0;
 
-  const messageListener = (message: any) => {
+  const messageListener = (message: { type?: string; windowId?: number }) => {
     if (message.windowId === windowId) {
       updateTabs();
     }
@@ -46,6 +46,7 @@
     isLoading = false;
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   $: query, updateTabs();
 
   const focusWindow = () => {
@@ -66,12 +67,6 @@
 
   const toggleWindow = () => {
     isHidden = !isHidden;
-  };
-
-  const allDiscard = () => {
-    tabs.forEach((tab) => {
-      if (tab.id) chrome.tabs.discard(tab.id);
-    });
   };
 
   onMount(() => {

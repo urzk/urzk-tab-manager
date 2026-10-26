@@ -42,7 +42,7 @@
   $: query = getQuery(inputValue);
 
   // メッセージリスナーを設定
-  const messageListener = (message: any) => {
+  const messageListener = (message: { type?: string; windowId?: number }) => {
     if (
       message.type === "WINDOW_CREATED" ||
       message.type === "WINDOW_FOCUS_CHANGED" ||
@@ -59,7 +59,6 @@
       currentWindow = result;
     });
     chrome.windows.getAll({}, (result) => {
-      console.log("updateWindows", result);
       windows = result;
     });
   };
