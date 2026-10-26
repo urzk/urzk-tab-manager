@@ -9,5 +9,10 @@
     "emitDeclarationOnly": true,
     "outDir": "./node_modules/.tmp/tsconfig.node"
   },
-  "include": ["vite.config.ts", "vitest.config.ts", "build/**/*.ts"]
+  "include": [
+    "vite.config.ts",
+    "vitest.config.ts",
+    "vite.mock.config.ts",
+    "build/**/*.ts"
+  ]
 }

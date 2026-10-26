@@ -7,6 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "dev:mock": "vite --config vite.mock.config.ts",
+    "build:mock": "vite build --config vite.mock.config.ts",
     "package": "pnpm build && node scripts/package.mjs",
     "check": "svelte-check --tsconfig ./tsconfig.json && tsc -p tsconfig.node.json",
     "lint": "eslint .",
