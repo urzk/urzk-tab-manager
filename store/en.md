@@ -9,9 +9,9 @@ Urzk Tab Manager
 
 ## Short description
 
-<!-- 123 characters (limit 132) -->
+<!-- 129 characters (limit 132) -->
 
-See and manage every tab in every window from your new tab page. Search by title, site or load state. Built for 1000+ tabs.
+See and manage every tab in every window from your new tab page. Search by title, site or load state. Stays light with many tabs.
 
 ## Detailed description
 
@@ -21,10 +21,10 @@ Features
 
 • Every window at a glance. The current window is listed first and expanded; other windows can be expanded or collapsed. Each window shows its tab count, with buttons to minimize, focus or close it.
 • Tab cards. Each tab shows its favicon, title and URL. Click a card, or press Enter, to switch to that tab. Unloaded (discarded) tabs are dimmed.
-• Quick actions. Hover over a card, or focus it with the keyboard, to discard, close, pop out to a new window, move to the end of the current window, or move it up, down, left or right. Arrow keys move the focused tab too.
+• Quick actions. Hover over a card to discard, close, pop out to a new window, move to the end of the current window, or move it up, down, left or right. With the keyboard, Enter switches to the focused tab and the arrow keys move it.
 • Search. Type words to find tabs whose title contains them in that order (case-insensitive). Add site:example.com to match a site and its subdomains, and loaded: (or l:) to show only tabs that are loaded. Windows with no matches are hidden while you search.
 • Toolbar button and shortcut. Click the toolbar button or press Alt+Shift+T to jump to the tab manager. If it is already open, that tab is focused instead of opening another one. You can change the shortcut at chrome://extensions/shortcuts.
-• Built for many tabs. The page stays in sync with Chrome through tab events and checks itself against Chrome regularly, so the list is always accurate, even with more than 1000 tabs.
+• Designed for many tabs. The page is designed to stay light with many tabs. It follows Chrome's tab events and checks itself against Chrome regularly, so the list stays in sync with Chrome within seconds.
 • English and Japanese, following your browser's language.
 
 Privacy

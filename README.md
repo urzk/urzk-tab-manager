@@ -15,10 +15,10 @@ even with more than 1000 of them.
   buttons to minimize, focus or close it.
 - **Tab cards** with favicon, title and URL. Click a card or press Enter to
   switch to that tab. Discarded (unloaded) tabs are dimmed.
-- **Quick actions** appear when you hover over a card or focus it with the
-  keyboard: discard, close, pop out to a new window, move to the end of the
-  current window, and move up, down, left or right. Arrow keys move the
-  focused tab too.
+- **Quick actions** appear when you hover over a card: discard, close, pop
+  out to a new window, move to the end of the current window, and move up,
+  down, left or right. With the keyboard, Enter switches to the focused tab
+  and the arrow keys move it.
 - **Search** by title, site and load state (see below).
 - **Toolbar button and shortcut** to open the manager, or focus it if it is
   already open.

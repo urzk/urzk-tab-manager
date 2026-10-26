@@ -30,7 +30,8 @@ Urzk Tab Manager does not collect, store or transmit any user data.
 - The extension does not use any storage API, and does not save tab
   information to disk, to sync storage or anywhere else.
 - The extension does not send tab information, or any other data, to the
-  developer or to any third party. It makes no network requests of its own.
+  developer or to any third party. The only network activity is loading
+  favicon images, described below.
 - There are no analytics, tracking, advertising, accounts or remote code.
 
 ### Favicons
@@ -72,7 +73,7 @@ Urzk Tab Manager は、ユーザーデータを一切収集・保存・送信し
 
 - タブの情報は、新しいタブのページを開いている間、メモリ上でのみ処理します。ページを閉じると破棄されます。
 - ストレージ API は使用せず、タブの情報をディスクや同期ストレージなどに保存しません。
-- タブの情報やその他のデータを、開発者や第三者に送信しません。拡張機能自身がネットワーク通信を行うことはありません。
+- タブの情報やその他のデータを、開発者や第三者に送信しません。ネットワーク通信は、下記のファビコン画像の読み込みのみです。
 - アクセス解析、トラッキング、広告、アカウント、リモートコードはありません。
 
 ### ファビコン
