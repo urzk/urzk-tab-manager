@@ -140,6 +140,24 @@ describe("TabCard", () => {
     expect(onHover).toHaveBeenLastCalledWith(null);
   });
 
+  it("focusout to an element inside the card keeps hover", async () => {
+    const { onHover, container } = setup({ showActions: true });
+    const root = container.querySelector(".tab")!;
+    const btn = container.querySelector(".tab-button")!;
+    await fireEvent.focusOut(root, { relatedTarget: btn });
+    expect(onHover).not.toHaveBeenCalled();
+  });
+
+  it("focusout to outside or null clears hover", async () => {
+    const { onHover, container } = setup({ showActions: true });
+    const root = container.querySelector(".tab")!;
+    await fireEvent.focusOut(root, { relatedTarget: document.body });
+    expect(onHover).toHaveBeenLastCalledWith(null);
+    onHover.mockClear();
+    await fireEvent.focusOut(root, { relatedTarget: null });
+    expect(onHover).toHaveBeenLastCalledWith(null);
+  });
+
   it("action buttons call actions", async () => {
     const { actions } = setup({ showActions: true, isCurrent: false });
     await fireEvent.click(screen.getByTitle(en.closeTab.message));

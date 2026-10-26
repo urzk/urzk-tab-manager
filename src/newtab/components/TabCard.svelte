@@ -71,7 +71,11 @@
   onmouseenter={() => onHover(tab.id)}
   onmouseleave={() => onHover(null)}
   onfocusin={() => onHover(tab.id)}
-  onfocusout={() => onHover(null)}
+  onfocusout={(e) => {
+    const next = e.relatedTarget;
+    if (next instanceof Node && e.currentTarget.contains(next)) return;
+    onHover(null);
+  }}
 >
   {#if showActions}
     <TabActions
