@@ -1,0 +1,8 @@
+{
+  "extName": { "message": "Urzk Tab Manager" },
+  "extDescription": {
+    "message": "See and manage every tab in every window from your new tab page."
+  },
+  "actionTitle": { "message": "Open Urzk Tab Manager" },
+  "commandOpen": { "message": "Open Urzk Tab Manager" }
+}

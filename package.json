@@ -1,12 +1,13 @@
 {
   "name": "urzk-tab-manager",
   "version": "0.1.0",
-  "description": "",
+  "description": "Tab manager that replaces the new tab page",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "package": "pnpm build && node scripts/package.mjs",
     "check": "svelte-check --tsconfig ./tsconfig.json && tsc -p tsconfig.node.json",
     "lint": "eslint .",
     "test": "vitest run",
