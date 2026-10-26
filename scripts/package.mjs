@@ -14,5 +14,5 @@ if (manifest.version !== version) {
 mkdirSync(resolve(root, "release"), { recursive: true });
 const out = resolve(root, `release/urzk-tab-manager-${version}.zip`);
 rmSync(out, { force: true });
-execFileSync("zip", ["-r", "-X", out, "."], { cwd: resolve(root, "dist"), stdio: "inherit" });
+execFileSync("zip", ["-r", "-X", out, ".", "-x", "*.DS_Store"], { cwd: resolve(root, "dist"), stdio: "inherit" });
 process.stdout.write(`wrote ${out}\n`);

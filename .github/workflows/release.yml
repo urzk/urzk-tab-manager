@@ -4,16 +4,24 @@ on:
   push:
     tags: ["v*"]
 
-permissions:
-  contents: write
+permissions: {}
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
-  release:
+  # Runs npm code with a read-only token that is not persisted on disk.
+  build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 24
           cache: pnpm
@@ -28,8 +36,26 @@ jobs:
       - run: pnpm test
       - run: pnpm package
       - name: Extract release notes
-        run: node scripts/changelog-section.mjs "${GITHUB_REF_NAME#v}" > "$RUNNER_TEMP/notes.md"
+        run: node scripts/changelog-section.mjs "${GITHUB_REF_NAME#v}" > release-notes.md
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: release
+          path: |
+            release/*.zip
+            release-notes.md
+          if-no-files-found: error
+
+  # Holds the write token; checks out and runs no repository code.
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: release
       - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" release/*.zip --title "$GITHUB_REF_NAME" --notes-file "$RUNNER_TEMP/notes.md"
+        run: gh release create "$GITHUB_REF_NAME" release/*.zip --repo "$GITHUB_REPOSITORY" --title "$GITHUB_REF_NAME" --notes-file release-notes.md
