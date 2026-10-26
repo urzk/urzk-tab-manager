@@ -45,3 +45,7 @@ If you have state that's important to retain within a component, consider creati
 import { writable } from "svelte/store";
 export default writable(0);
 ```
+
+## Attribution
+
+Icons are derived from [Font Awesome Free](https://fontawesome.com) by @fontawesome, licensed under CC BY 4.0.
