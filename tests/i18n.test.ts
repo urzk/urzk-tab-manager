@@ -44,8 +44,10 @@ describe("locales", () => {
   it('every t("…") key used under src/ exists in en', () => {
     const used = new Set<string>();
     for (const text of Object.values(sources)) {
-      for (const m of text.matchAll(/\bt\("([A-Za-z]+)"/g)) used.add(m[1]);
+      for (const m of text.matchAll(/\bt\(\s*["'`]([A-Za-z]+)["'`]/g))
+        used.add(m[1]);
     }
+    expect(used.size).toBeGreaterThan(0);
     for (const k of used) expect(Object.keys(en), k).toContain(k);
   });
 });

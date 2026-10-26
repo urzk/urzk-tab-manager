@@ -24,10 +24,6 @@ main {
   padding: 0;
 }
 
-.container-tabs .is-hidden {
-  display: none;
-}
-
 .container-tabs ul > li {
   display: block;
   margin: 0;
