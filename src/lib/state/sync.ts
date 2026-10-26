@@ -63,7 +63,12 @@ export function createTabSync(api: ChromeApi, opts: SyncOptions = {}): TabSync {
       api.windows.getCurrent().catch(() => undefined),
       api.tabs.getCurrent().catch(() => undefined),
     ]);
-    return fromSnapshot(windows, current?.id, managerTab?.id);
+    // R11: the manager tab's window is authoritative; it follows detaches
+    return fromSnapshot(
+      windows,
+      managerTab?.windowId ?? current?.id,
+      managerTab?.id,
+    );
   }
 
   function notify() {
@@ -138,7 +143,11 @@ export function createTabSync(api: ChromeApi, opts: SyncOptions = {}): TabSync {
       try {
         snap = await snapshot();
       } catch {
-        sawEvents = true; // keep the old state and retry via the debounce
+        // halted (hidden/stopped) while in flight: the halt owns the mode
+        if (gen !== generation) return;
+        // Every attempt so far failed while still current: go live with the
+        // state we have and let the debounce reconcile retry the snapshot.
+        sawEvents = true;
         break;
       }
       if (gen !== generation) return;

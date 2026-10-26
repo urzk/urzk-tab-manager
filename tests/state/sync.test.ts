@@ -424,4 +424,68 @@ describe("TabSync", () => {
     expect(getAll).toHaveBeenCalledTimes(1);
     expect(listeners()).toBe(0);
   });
+
+  test("a boot snapshot failing after stop() does not revive the sync", async () => {
+    const f = createFakeChrome(seed());
+    let fail!: (e: Error) => void;
+    const getAll = vi.spyOn(f.windows, "getAll").mockImplementationOnce(
+      () =>
+        new Promise((_, rej) => {
+          fail = rej;
+        }),
+    );
+    const { sync, seen } = make(f);
+    const started = sync.start();
+    sync.stop();
+    fail(new Error("boom"));
+    await started;
+    await settle();
+    expect(vi.getTimerCount()).toBe(0);
+    await vi.advanceTimersByTimeAsync(60_000);
+    expect(getAll).toHaveBeenCalledTimes(1);
+    expect(seen).toHaveLength(1);
+  });
+
+  test("a boot snapshot failing after a hide still resyncs on show", async () => {
+    const f = createFakeChrome(seed());
+    let fail!: (e: Error) => void;
+    vi.spyOn(f.windows, "getAll").mockImplementationOnce(
+      () =>
+        new Promise((_, rej) => {
+          fail = rej;
+        }),
+    );
+    const listeners = countListeners(f);
+    const { sync, last } = make(f);
+    const started = sync.start();
+    sync.setVisible(false);
+    fail(new Error("boom"));
+    await started;
+    await settle();
+    expect(vi.getTimerCount()).toBe(0);
+    sync.setVisible(true);
+    await settle();
+    expect(listeners()).toBe(11);
+    f.setTitle(tabId(f, 0, 0), "live");
+    await settle();
+    expect(last().tabs.get(tabId(f, 0, 0))!.title).toBe("live");
+  });
+
+  test("currentWindowId follows the manager tab across reconciles (R11)", async () => {
+    const f = createFakeChrome(seed());
+    const [, B] = f.truth().map((w) => w.id!);
+    const managerId = tabId(f, 0, 1);
+    vi.spyOn(f.tabs, "getCurrent").mockImplementation(async () =>
+      f.tabs.get(managerId),
+    );
+    const onMismatch = vi.fn();
+    const { sync, last } = make(f, { onMismatch });
+    await sync.start();
+    await f.tabs.move(managerId, { windowId: B, index: -1 });
+    await settle();
+    expect(last().currentWindowId).toBe(B);
+    await vi.advanceTimersByTimeAsync(500);
+    expect(last().currentWindowId).toBe(B);
+    expect(onMismatch).not.toHaveBeenCalled();
+  });
 });
