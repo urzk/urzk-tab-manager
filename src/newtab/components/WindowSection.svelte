@@ -45,6 +45,10 @@
   );
   // Card positions are in full window order, not the filtered list.
   const positions = $derived(new Map(tabIds.map((id, i) => [id, i])));
+  // Chrome keeps pinned tabs first, so they form a prefix of tabIds.
+  const pinnedCount = $derived(
+    tabIds.filter((id) => tabs.get(id)?.pinned).length,
+  );
   const columns = $derived(
     Math.max(1, Math.floor((width + TAB_GAP) / (TAB_WIDTH + TAB_GAP))),
   );
@@ -76,6 +80,7 @@
       {tab}
       index={positions.get(id) ?? -1}
       count={tabIds.length}
+      {pinnedCount}
       {columns}
       {isCurrent}
       {hasQuery}

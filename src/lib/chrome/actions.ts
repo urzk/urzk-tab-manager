@@ -12,7 +12,8 @@ export type Actions = {
   discardTab(id: number): Promise<void>;
   moveTab(id: number, index: number): Promise<void>;
   moveToWindow(id: number, windowId: number): Promise<void>;
-  moveToCurrentWindow(id: number): Promise<void>;
+  /** Pinned tabs go to the end of the current window's pinned tabs. */
+  moveToCurrentWindow(id: number, pinned?: boolean): Promise<void>;
   swapTabs(
     aId: number,
     aIndex: number,
@@ -51,10 +52,15 @@ export function createActions(api: ChromeApi): Actions {
     moveTab: (id, index) => run("moveTab", () => api.tabs.move(id, { index })),
     moveToWindow: (id, windowId) =>
       run("moveToWindow", () => api.tabs.move(id, { windowId, index: -1 })),
-    moveToCurrentWindow: (id) =>
+    moveToCurrentWindow: (id, pinned = false) =>
       run("moveToCurrentWindow", async () => {
         const w = await api.windows.getCurrent();
-        await api.tabs.move(id, { windowId: w.id, index: -1 });
+        let index = -1;
+        if (pinned) {
+          const zone = await api.tabs.query({ windowId: w.id, pinned: true });
+          index = zone.filter((t) => t.id !== id).length;
+        }
+        await api.tabs.move(id, { windowId: w.id, index });
       }),
     swapTabs: async (aId, aIndex, bId, bIndex) => {
       const first = await guard("swapTabs", () =>

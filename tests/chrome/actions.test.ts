@@ -98,6 +98,26 @@ describe("actions", () => {
     expect(titles(f, 1)).toEqual(["d", "e", "a"]);
   });
 
+  it("moveToCurrentWindow puts a pinned tab at the end of the pinned zone", async () => {
+    const f = createFakeChrome({
+      windows: [
+        { tabs: [{ title: "p", url: "https://p.test/", pinned: true }] },
+        {
+          tabs: [
+            { title: "q", url: "https://q.test/", pinned: true },
+            { title: "r", url: "https://r.test/" },
+          ],
+        },
+      ],
+      currentWindowIndex: 1,
+    });
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const p = f.truth()[0].tabs![0];
+    await createActions(f).moveToCurrentWindow(p.id!, true);
+    expect(f.truth()[0].tabs!.map((t) => t.title)).toEqual(["q", "p", "r"]);
+    expect(warn).not.toHaveBeenCalled();
+  });
+
   it("moveToCurrentWindow swallows getCurrent failure", async () => {
     const f = createFakeChrome(seed());
     f.windows.getCurrent = () => Promise.reject(new Error("gone"));

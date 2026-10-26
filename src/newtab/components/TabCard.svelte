@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Actions } from "../../lib/chrome/actions";
+  import { moveTarget, type Direction } from "../../lib/move";
   import type { TabLite } from "../../lib/state/model";
   import Favicon from "./Favicon.svelte";
   import TabActions from "./TabActions.svelte";
@@ -8,6 +9,8 @@
     tab: TabLite;
     index: number;
     count: number;
+    /** Number of pinned tabs at the start of the window. */
+    pinnedCount: number;
     columns: number;
     isCurrent: boolean;
     hasQuery: boolean;
@@ -20,6 +23,7 @@
     tab,
     index,
     count,
+    pinnedCount,
     columns,
     isCurrent,
     hasQuery,
@@ -29,15 +33,14 @@
     onHover,
   }: Props = $props();
 
-  function move(dir: "up" | "down" | "left" | "right") {
+  function move(dir: Direction) {
     if (hasQuery) return;
+    const to = moveTarget(index, dir, columns, count, pinnedCount);
+    if (to === undefined) return;
     if (dir === "left" || dir === "right") {
-      const to = index + (dir === "left" ? -1 : 1);
-      if (to >= 0 && to < count) void actions.moveTab(tab.id, to);
+      void actions.moveTab(tab.id, to);
       return;
     }
-    const to = index + (dir === "up" ? -columns : columns);
-    if (to < 0 || to >= count) return;
     const other = neighbor(to);
     if (other === undefined) return;
     void actions.swapTabs(tab.id, index, other, to);
@@ -82,6 +85,7 @@
       {tab}
       {index}
       {count}
+      {pinnedCount}
       {columns}
       {isCurrent}
       {hasQuery}

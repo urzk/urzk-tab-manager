@@ -28,6 +28,7 @@ function setup(
     tab: TabLite;
     index: number;
     count: number;
+    pinnedCount: number;
     columns: number;
     isCurrent: boolean;
     hasQuery: boolean;
@@ -35,7 +36,9 @@ function setup(
     neighbor: (i: number) => number | undefined;
   }> = {},
 ) {
-  const fake = createFakeChrome({ windows: [{ tabs: [{ title: "a", url: "https://a.test/" }] }] });
+  const fake = createFakeChrome({
+    windows: [{ tabs: [{ title: "a", url: "https://a.test/" }] }],
+  });
   const actions = createActions(fake);
   for (const k of Object.keys(actions) as (keyof typeof actions)[]) {
     vi.spyOn(actions, k).mockResolvedValue(undefined);
@@ -47,6 +50,7 @@ function setup(
       tab,
       index: 1,
       count: 5,
+      pinnedCount: 0,
       columns: 2,
       isCurrent: true,
       hasQuery: false,
@@ -89,12 +93,16 @@ describe("TabCard", () => {
         container.querySelector(`.tab-button-${p}.tab-button-active`),
       ).toBeNull();
     }
-    expect(container.querySelector(".tab-button-topright.tab-button-active")).not.toBeNull();
+    expect(
+      container.querySelector(".tab-button-topright.tab-button-active"),
+    ).not.toBeNull();
   });
 
   it("Enter focuses tab", async () => {
     const { actions, tab } = setup();
-    await fireEvent.keyDown(screen.getByRole("button", { name: /Title/ }), { key: "Enter" });
+    await fireEvent.keyDown(screen.getByRole("button", { name: /Title/ }), {
+      key: "Enter",
+    });
     expect(actions.focusTab).toHaveBeenCalledWith(tab);
   });
 
@@ -106,7 +114,9 @@ describe("TabCard", () => {
 
   it("ArrowRight moves tab to index+1", async () => {
     const { actions } = setup();
-    await fireEvent.keyDown(screen.getByRole("button", { name: /Title/ }), { key: "ArrowRight" });
+    await fireEvent.keyDown(screen.getByRole("button", { name: /Title/ }), {
+      key: "ArrowRight",
+    });
     expect(actions.moveTab).toHaveBeenCalledWith(11, 2);
   });
 
@@ -123,7 +133,9 @@ describe("TabCard", () => {
 
   it("arrow moves disabled while hasQuery", async () => {
     const { actions } = setup({ hasQuery: true });
-    await fireEvent.keyDown(screen.getByRole("button", { name: /Title/ }), { key: "ArrowRight" });
+    await fireEvent.keyDown(screen.getByRole("button", { name: /Title/ }), {
+      key: "ArrowRight",
+    });
     expect(actions.moveTab).not.toHaveBeenCalled();
   });
 
@@ -163,7 +175,7 @@ describe("TabCard", () => {
     await fireEvent.click(screen.getByTitle(en.closeTab.message));
     expect(actions.closeTab).toHaveBeenCalledWith(11);
     await fireEvent.click(screen.getByTitle(en.moveToCurrentEnd.message));
-    expect(actions.moveToCurrentWindow).toHaveBeenCalledWith(11);
+    expect(actions.moveToCurrentWindow).toHaveBeenCalledWith(11, false);
     await fireEvent.click(screen.getByTitle(en.discardTab.message));
     expect(actions.discardTab).toHaveBeenCalledWith(11);
     await fireEvent.click(screen.getByTitle(en.popOut.message));

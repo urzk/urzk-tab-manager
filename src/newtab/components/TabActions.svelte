@@ -3,28 +3,37 @@
   import type { icons } from "../../icons/paths";
   import type { Actions } from "../../lib/chrome/actions";
   import { t } from "../../lib/i18n";
+  import { moveTarget, type Direction } from "../../lib/move";
   import type { TabLite } from "../../lib/state/model";
 
   type Props = {
     tab: TabLite;
     index: number;
     count: number;
+    pinnedCount: number;
     columns: number;
     isCurrent: boolean;
     hasQuery: boolean;
     actions: Actions;
-    move: (dir: "up" | "down" | "left" | "right") => void;
+    move: (dir: Direction) => void;
   };
   let {
     tab,
     index,
     count,
+    pinnedCount,
     columns,
     isCurrent,
     hasQuery,
     actions,
     move,
   }: Props = $props();
+
+  const canMove = (dir: Direction) =>
+    !hasQuery &&
+    moveTarget(index, dir, columns, count, pinnedCount) !== undefined;
+  // pinned tabs stay among the pinned ones, so their "end" is the zone's end
+  const zoneEnd = $derived(tab.pinned ? pinnedCount - 1 : count - 1);
 
   type Btn = {
     title: string;
@@ -59,35 +68,35 @@
     {
       title: t("moveToCurrentEnd"),
       position: "bottomright",
-      isActive: !isCurrent || index !== count - 1,
+      isActive: !isCurrent || index !== zoneEnd,
       icon: isCurrent ? "arrowDown" : "arrowUp",
-      onClick: () => void actions.moveToCurrentWindow(tab.id),
+      onClick: () => void actions.moveToCurrentWindow(tab.id, tab.pinned),
     },
     {
       title: t("moveUp"),
       position: "top",
-      isActive: !hasQuery && index >= columns,
+      isActive: canMove("up"),
       icon: "arrowUp",
       onClick: () => move("up"),
     },
     {
       title: t("moveLeft"),
       position: "left",
-      isActive: !hasQuery && index > 0,
+      isActive: canMove("left"),
       icon: "arrowLeft",
       onClick: () => move("left"),
     },
     {
       title: t("moveRight"),
       position: "right",
-      isActive: !hasQuery && index < count - 1,
+      isActive: canMove("right"),
       icon: "arrowRight",
       onClick: () => move("right"),
     },
     {
       title: t("moveDown"),
       position: "bottom",
-      isActive: !hasQuery && index < count - columns,
+      isActive: canMove("down"),
       icon: "arrowDown",
       onClick: () => move("down"),
     },
