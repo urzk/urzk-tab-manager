@@ -1,8 +1,109 @@
 {
-  "extName": { "message": "Urzk Tab Manager" },
-  "extDescription": {
-    "message": "See and manage every tab in every window from your new tab page."
+  "extName": {
+    "message": "Urzk Tab Manager",
+    "description": "Extension name"
   },
-  "actionTitle": { "message": "Open Urzk Tab Manager" },
-  "commandOpen": { "message": "Open Urzk Tab Manager" }
+  "extDescription": {
+    "message": "See and manage every tab in every window from your new tab page.",
+    "description": "Extension description shown in the Chrome Web Store"
+  },
+  "actionTitle": {
+    "message": "Open Urzk Tab Manager",
+    "description": "Tooltip of the toolbar button"
+  },
+  "commandOpen": {
+    "message": "Open Urzk Tab Manager",
+    "description": "Description of the keyboard shortcut that opens the manager"
+  },
+  "heading": {
+    "message": "Tabs",
+    "description": "Page heading"
+  },
+  "searchPlaceholder": {
+    "message": "Search tabs...",
+    "description": "Placeholder of the tab search box"
+  },
+  "windowTitle": {
+    "message": "Window (ID: #$ID$)",
+    "description": "Title of a window section; $ID$ is the numeric window ID",
+    "placeholders": {
+      "id": {
+        "content": "$1"
+      }
+    }
+  },
+  "currentWindowTitle": {
+    "message": "Current Window (ID: #$ID$)",
+    "description": "Title of the window that contains this page; $ID$ is the numeric window ID",
+    "placeholders": {
+      "id": {
+        "content": "$1"
+      }
+    }
+  },
+  "tabCountOne": {
+    "message": "1 tab",
+    "description": "Tab count label for exactly one tab"
+  },
+  "tabCount": {
+    "message": "$COUNT$ tabs",
+    "description": "Tab count label; $COUNT$ is the number of tabs",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "toggleWindow": {
+    "message": "Show or hide tabs",
+    "description": "Tooltip of the button that expands or collapses a window's tab list"
+  },
+  "minimizeWindow": {
+    "message": "minimize window",
+    "description": "Tooltip of the minimize window button"
+  },
+  "focusWindow": {
+    "message": "focus window",
+    "description": "Tooltip of the focus window button"
+  },
+  "closeWindow": {
+    "message": "close window",
+    "description": "Tooltip of the close window button"
+  },
+  "discardTab": {
+    "message": "discard tab",
+    "description": "Tooltip of the button that unloads a tab from memory"
+  },
+  "closeTab": {
+    "message": "close tab",
+    "description": "Tooltip of the close tab button"
+  },
+  "popOut": {
+    "message": "pop out to new window",
+    "description": "Tooltip of the button that moves a tab into its own new window"
+  },
+  "moveToCurrentEnd": {
+    "message": "move to end of current window",
+    "description": "Tooltip of the button that moves a tab to the end of the current window"
+  },
+  "moveUp": {
+    "message": "move up",
+    "description": "Tooltip of the move tab up button"
+  },
+  "moveLeft": {
+    "message": "move left",
+    "description": "Tooltip of the move tab left button"
+  },
+  "moveRight": {
+    "message": "move right",
+    "description": "Tooltip of the move tab right button"
+  },
+  "moveDown": {
+    "message": "move down",
+    "description": "Tooltip of the move tab down button"
+  },
+  "faviconAlt": {
+    "message": "favicon",
+    "description": "Alt text of a tab's favicon image"
+  }
 }

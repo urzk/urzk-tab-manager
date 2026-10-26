@@ -1,0 +1,109 @@
+{
+  "extName": {
+    "message": "Urzk Tab Manager",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "新しいタブで、すべてのウィンドウのタブを一覧・整理できます。",
+    "description": "Extension description shown in the Chrome Web Store"
+  },
+  "actionTitle": {
+    "message": "Urzk Tab Manager を開く",
+    "description": "Tooltip of the toolbar button"
+  },
+  "commandOpen": {
+    "message": "Urzk Tab Manager を開く",
+    "description": "Description of the keyboard shortcut that opens the manager"
+  },
+  "heading": {
+    "message": "タブ",
+    "description": "Page heading"
+  },
+  "searchPlaceholder": {
+    "message": "タブを検索…",
+    "description": "Placeholder of the tab search box"
+  },
+  "windowTitle": {
+    "message": "ウィンドウ (ID: #$ID$)",
+    "description": "Title of a window section; $ID$ is the numeric window ID",
+    "placeholders": {
+      "id": {
+        "content": "$1"
+      }
+    }
+  },
+  "currentWindowTitle": {
+    "message": "現在のウィンドウ (ID: #$ID$)",
+    "description": "Title of the window that contains this page; $ID$ is the numeric window ID",
+    "placeholders": {
+      "id": {
+        "content": "$1"
+      }
+    }
+  },
+  "tabCountOne": {
+    "message": "1 タブ",
+    "description": "Tab count label for exactly one tab"
+  },
+  "tabCount": {
+    "message": "$COUNT$ タブ",
+    "description": "Tab count label; $COUNT$ is the number of tabs",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "toggleWindow": {
+    "message": "タブの表示/非表示",
+    "description": "Tooltip of the button that expands or collapses a window's tab list"
+  },
+  "minimizeWindow": {
+    "message": "ウィンドウを最小化",
+    "description": "Tooltip of the minimize window button"
+  },
+  "focusWindow": {
+    "message": "ウィンドウにフォーカス",
+    "description": "Tooltip of the focus window button"
+  },
+  "closeWindow": {
+    "message": "ウィンドウを閉じる",
+    "description": "Tooltip of the close window button"
+  },
+  "discardTab": {
+    "message": "タブを破棄",
+    "description": "Tooltip of the button that unloads a tab from memory"
+  },
+  "closeTab": {
+    "message": "タブを閉じる",
+    "description": "Tooltip of the close tab button"
+  },
+  "popOut": {
+    "message": "新しいウィンドウに切り出す",
+    "description": "Tooltip of the button that moves a tab into its own new window"
+  },
+  "moveToCurrentEnd": {
+    "message": "現在のウィンドウの末尾へ移動",
+    "description": "Tooltip of the button that moves a tab to the end of the current window"
+  },
+  "moveUp": {
+    "message": "上へ",
+    "description": "Tooltip of the move tab up button"
+  },
+  "moveLeft": {
+    "message": "左へ",
+    "description": "Tooltip of the move tab left button"
+  },
+  "moveRight": {
+    "message": "右へ",
+    "description": "Tooltip of the move tab right button"
+  },
+  "moveDown": {
+    "message": "下へ",
+    "description": "Tooltip of the move tab down button"
+  },
+  "faviconAlt": {
+    "message": "ファビコン",
+    "description": "Alt text of a tab's favicon image"
+  }
+}
