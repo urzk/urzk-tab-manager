@@ -30,13 +30,11 @@ scripts/open-many-tabs.sh ../urzk-tab-manager-baseline 1000 4
 
 ```sh
 pnpm build
-scripts/open-many-tabs.sh . 1000 4
+scripts/open-many-tabs.sh dist 1000 4
 ```
 
-Pass the repo root (`.`), not `dist`: `--load-extension` needs a directory
-containing `manifest.json`, and `dist/` only holds the Vite build output
-(no manifest). The root manifest points `chrome_url_overrides.newtab` at
-`dist/index.html`, so the root is the extension directory for both builds.
+Requires the restructured build from the 1.0 work, where `dist/` is
+self-contained with `dist/manifest.json`. Run `pnpm build` first.
 
 ## Metrics to record
 
@@ -51,6 +49,19 @@ For each build, after the tabs have opened:
 4. **Time-to-render**: DevTools Performance panel. Record a load of the new-tab
    page and measure from navigation start to the end of the last long task
    (> 50 ms).
+
+### If the extension does not load
+
+Branded Google Chrome 137+ ignores `--load-extension`. The script passes
+`--disable-features=DisableLoadExtensionCommandLineSwitch` to work around this,
+but if the extension still does not appear (no new-tab override, no
+`Extension: ...` row in Task Manager), use one of these alternatives:
+
+- Point `CHROME` at Chrome for Testing or Chromium, which still honor
+  `--load-extension`.
+- Or load the directory manually: open `chrome://extensions`, enable Developer
+  mode, click "Load unpacked", and select the extension directory, in the same
+  profile the script printed (`--user-data-dir`).
 
 Also note the Chrome version (`chrome://version`) and the machine
 (model, CPU, RAM).

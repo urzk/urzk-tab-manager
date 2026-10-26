@@ -30,6 +30,7 @@ if [[ ! -f "$EXT_DIR/manifest.json" ]]; then
   echo "warning: $EXT_DIR has no manifest.json; Chrome will not load it as an extension" >&2
 fi
 PROFILE="$(mktemp -d)"
+echo "note: if the extension does not appear, use Chrome for Testing/Chromium via CHROME=..., or load $EXT_DIR manually at chrome://extensions (Load unpacked) in profile $PROFILE" >&2
 PER_WINDOW=$(( (TABS + WINDOWS - 1) / WINDOWS ))
 
 # Print a command line in a copy-pasteable, shell-escaped form.
@@ -49,7 +50,8 @@ for (( w = 1; w <= WINDOWS && tab <= TABS; w++ )); do
     urls+=("$(tab_url "$tab")")
   done
 
-  common=("--user-data-dir=$PROFILE" "--load-extension=$EXT_DIR" "--no-first-run")
+  common=("--user-data-dir=$PROFILE" "--load-extension=$EXT_DIR" "--no-first-run"
+    "--disable-features=DisableLoadExtensionCommandLineSwitch")
   if (( w == 1 )); then
     cmd=("$CHROME" "${common[@]}" "${urls[@]}")
   else
