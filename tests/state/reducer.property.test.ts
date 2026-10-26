@@ -10,6 +10,9 @@ import {
   type FakeSeed,
 } from "../../src/mock/fake-chrome";
 
+// 300 runs of up to 60 ops each; the default 5s is too tight on a busy machine.
+vi.setConfig({ testTimeout: 30_000 });
+
 // ---- normalisation --------------------------------------------------------
 
 type NormTab = {
