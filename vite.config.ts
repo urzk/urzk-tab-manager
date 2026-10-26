@@ -10,6 +10,7 @@ export default defineConfig({
   base: "./",
   plugins: [svelte(), manifestPlugin()],
   build: {
+    target: "chrome104", // matches minimum_chrome_version
     outDir: "../dist",
     emptyOutDir: true,
     rollupOptions: {

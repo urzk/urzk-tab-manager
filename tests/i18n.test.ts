@@ -1,7 +1,7 @@
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import en from "../public/_locales/en/messages.json";
 import ja from "../public/_locales/ja/messages.json";
-import { setFallbackMessages, t } from "../src/lib/i18n";
+import { localizeDocument, setFallbackMessages, t } from "../src/lib/i18n";
 
 type Dict = Record<string, { message: string; placeholders?: object }>;
 const sources = import.meta.glob<string>("../src/**/*.{ts,svelte}", {
@@ -75,5 +75,31 @@ describe("t fallback", () => {
   it("returns plain messages", () => {
     setFallbackMessages({ heading: { message: "Tabs" } });
     expect(t("heading")).toBe("Tabs");
+  });
+});
+
+describe("localizeDocument", () => {
+  afterEach(() => vi.unstubAllGlobals());
+
+  it("sets the title and lang from chrome.i18n", () => {
+    vi.stubGlobal("chrome", {
+      i18n: {
+        getMessage: (k: string) => (k === "pageTitle" ? "Localized" : ""),
+        getUILanguage: () => "ja",
+      },
+    });
+    document.title = "static";
+    document.documentElement.lang = "en";
+    localizeDocument(document);
+    expect(document.title).toBe("Localized");
+    expect(document.documentElement.lang).toBe("ja");
+  });
+
+  it("keeps lang when chrome.i18n is unavailable", () => {
+    setFallbackMessages(en);
+    document.documentElement.lang = "en";
+    localizeDocument(document);
+    expect(document.title).toBe(en.pageTitle.message);
+    expect(document.documentElement.lang).toBe("en");
   });
 });

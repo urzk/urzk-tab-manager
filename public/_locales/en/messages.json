@@ -15,6 +15,10 @@
     "message": "Open Urzk Tab Manager",
     "description": "Description of the keyboard shortcut that opens the manager"
   },
+  "pageTitle": {
+    "message": "Urzk Tab Manager",
+    "description": "Browser tab title of the manager page"
+  },
   "heading": {
     "message": "Tabs",
     "description": "Page heading"

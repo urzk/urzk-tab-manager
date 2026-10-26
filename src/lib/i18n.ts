@@ -35,3 +35,12 @@ export function t(key: MessageKey, subs?: string | string[]): string {
   }
   return fromFallback(key, list);
 }
+
+/** Localizes the page title and `lang`; keeps the static values as fallback. */
+export function localizeDocument(doc: Document): void {
+  doc.title = t("pageTitle");
+  if (typeof chrome !== "undefined" && chrome.i18n?.getUILanguage) {
+    const lang = chrome.i18n.getUILanguage();
+    if (lang) doc.documentElement.lang = lang;
+  }
+}
