@@ -1,0 +1,32 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #222;
+  color: #eee;
+}
+
+main {
+  padding: 2rem 4rem;
+}
+
+.container-tabs {
+  display: flex;
+  flex-direction: column;
+}
+
+.container-tabs ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+}
+
+.container-tabs ul > li {
+  display: block;
+  margin: 0;
+  padding: 0;
+  width: 288px;
+}

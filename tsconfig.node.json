@@ -6,7 +6,17 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "strict": true,
-    "noEmit": true
+    // only this project's types: a parent directory's node_modules/@types
+    // must not make the check pass locally while it fails in CI
+    "typeRoots": ["./node_modules/@types"],
+    "types": ["node"],
+    "emitDeclarationOnly": true,
+    "outDir": "./node_modules/.tmp/tsconfig.node"
   },
-  "include": ["vite.config.ts"]
+  "include": [
+    "vite.config.ts",
+    "vitest.config.ts",
+    "vite.mock.config.ts",
+    "build/**/*.ts"
+  ]
 }

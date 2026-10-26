@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <!-- Urzk Tab Manager: a 2x2 grid of tab cards on a dark rounded square.
+       Palette follows the UI: #222 background, #ddd cards, #111 details.
+       The bottom-right card is dimmed like a discarded tab. -->
+  <rect x="8" y="8" width="112" height="112" rx="24" fill="#222"/>
+  <g id="card">
+    <rect x="20" y="28" width="40" height="32" rx="5" fill="#ddd"/>
+    <rect x="26" y="34" width="9" height="9" rx="2" fill="#111"/>
+    <rect x="39" y="35" width="15" height="3" rx="1.5" fill="#111"/>
+    <rect x="39" y="40" width="10" height="3" rx="1.5" fill="#111"/>
+    <rect x="26" y="50" width="28" height="3" rx="1.5" fill="#777"/>
+  </g>
+  <use href="#card" x="48"/>
+  <use href="#card" y="40"/>
+  <use href="#card" x="48" y="40" opacity="0.5"/>
+</svg>
