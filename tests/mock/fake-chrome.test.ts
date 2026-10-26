@@ -472,12 +472,28 @@ describe("fake chrome", () => {
     f.flush();
     const nb = ids(f, 0)[1];
     expect(nb).not.toBe(b);
-    expect(log).toEqual([["t.replaced", nb, b]]);
+    expect(names(log)).toEqual(["t.replaced", "t.updated"]);
+    expect(log[0]).toEqual(["t.replaced", nb, b]);
     expect(f.truth()[0].tabs![1]).toMatchObject({
       id: nb,
       index: 1,
       discarded: true,
     });
+  });
+
+  // property-test counterexample: discard with replacement left listeners no way
+  // to learn that the new tab is discarded
+  it("discard with replaceOnDiscard reports discarded:true for the new id via onUpdated", async () => {
+    const f = manual({ ...seed(), replaceOnDiscard: true });
+    const log = record(f);
+    const [, b] = ids(f, 0);
+    await f.tabs.discard(b);
+    f.flush();
+    const nb = ids(f, 0)[1];
+    const updated = log.find((e) => e[0] === "t.updated")!;
+    expect(updated[1]).toBe(nb);
+    expect(updated[2]).toEqual({ discarded: true });
+    expect(updated[3]).toMatchObject({ id: nb, discarded: true });
   });
 
   it("tabs.create is active by default and deactivates the previous active tab", async () => {

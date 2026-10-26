@@ -20,7 +20,7 @@ export type FakeSeedTab = {
 export type FakeSeed = {
   windows: { tabs: FakeSeedTab[]; state?: `${chrome.windows.WindowState}` }[];
   currentWindowIndex?: number;
-  /** When true, `tabs.discard` swaps the tab id and fires `onReplaced` (default: false). */
+  /** When true, `tabs.discard` swaps the tab id and fires `onReplaced`, then `onUpdated` for the new id (default: false). */
   replaceOnDiscard?: boolean;
 };
 
@@ -423,6 +423,8 @@ export function createFakeChrome(seed: FakeSeed = { windows: [] }): FakeChrome {
         tab.id = nextId++;
         tab.discarded = true;
         emit(e.tReplaced, tab.id, old);
+        // Chrome still reports the discard itself; onReplaced alone carries no state
+        emit(e.tUpdated, tab.id, { discarded: true }, clone(tab));
       } else {
         tab.discarded = true;
         emit(e.tUpdated, id, { discarded: true }, clone(tab));
