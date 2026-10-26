@@ -9,7 +9,7 @@ PORT=4174
 OUT=store/screenshots
 
 pnpm build:mock >/dev/null
-pnpm exec vite preview --config vite.mock.config.ts --port "$PORT" --strictPort \
+node_modules/.bin/vite preview --config vite.mock.config.ts --port "$PORT" --strictPort \
   >/dev/null 2>&1 &
 SERVER=$!
 trap 'kill "$SERVER" 2>/dev/null || true' EXIT
