@@ -25,6 +25,6 @@ export async function openManager(
       await api.tabs.create({ url: managerUrl, windowId: currentWindowId });
     }
   } catch (e) {
-    console.warn("openManager failed", e);
+    if (import.meta.env.DEV) console.warn("openManager failed", e);
   }
 }
