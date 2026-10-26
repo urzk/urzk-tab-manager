@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Extension and toolbar icons.
 - Clicking the toolbar button or pressing Alt+Shift+T focuses the tab manager if it is already open, or opens it otherwise.
 - Japanese UI, selected automatically from the browser language.
 - Search is case-insensitive and matches words in order.

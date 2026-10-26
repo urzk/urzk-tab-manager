@@ -16,7 +16,8 @@
     "format": "prettier --write .",
     "release:patch": "node scripts/release.mjs patch",
     "release:minor": "node scripts/release.mjs minor",
-    "release:major": "node scripts/release.mjs major"
+    "release:major": "node scripts/release.mjs major",
+    "icons": "node scripts/icons.mjs"
   },
   "keywords": [],
   "author": "Urozuki",
@@ -24,6 +25,7 @@
   "packageManager": "pnpm@12.15.0",
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@resvg/resvg-js": "^2.6.2",
     "@sveltejs/vite-plugin-svelte": "^7.3.1",
     "@testing-library/svelte": "^5.4.2",
     "@tsconfig/svelte": "^5.0.8",

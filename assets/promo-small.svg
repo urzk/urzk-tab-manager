@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="440" height="280" viewBox="0 0 440 280">
+  <!-- Chrome Web Store small promo tile. The icon artwork is a copy of
+       icon.svg; keep the two in sync. Text uses system fonts loaded by
+       scripts/icons.mjs (Helvetica on macOS). -->
+  <rect width="440" height="280" fill="#222"/>
+  <g transform="translate(160 24)">
+    <rect x="8" y="8" width="112" height="112" rx="24" fill="#2e2e2e"/>
+    <g id="card">
+      <rect x="20" y="28" width="40" height="32" rx="5" fill="#ddd"/>
+      <rect x="26" y="34" width="9" height="9" rx="2" fill="#111"/>
+      <rect x="39" y="35" width="15" height="3" rx="1.5" fill="#111"/>
+      <rect x="39" y="40" width="10" height="3" rx="1.5" fill="#111"/>
+      <rect x="26" y="50" width="28" height="3" rx="1.5" fill="#777"/>
+    </g>
+    <use href="#card" x="48"/>
+    <use href="#card" y="40"/>
+    <use href="#card" x="48" y="40" opacity="0.5"/>
+  </g>
+  <text x="220" y="200" text-anchor="middle" fill="#eee"
+        font-family="Helvetica Neue, Helvetica, Arial, sans-serif"
+        font-size="34" font-weight="bold">Urzk Tab Manager</text>
+  <text x="220" y="236" text-anchor="middle" fill="#aaa"
+        font-family="Helvetica Neue, Helvetica, Arial, sans-serif"
+        font-size="17">Every tab in every window, on your new tab page</text>
+</svg>
