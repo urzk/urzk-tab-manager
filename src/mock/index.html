@@ -4,6 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tab manager (demo)</title>
+    <!-- Chrome injects this into extension pages; mirror it so the demo
+         (a plain web page) looks like the real new tab page. -->
+    <style>
+      body {
+        font-family: system-ui, "Hiragino Kaku Gothic ProN", sans-serif;
+        font-size: 75%;
+      }
+    </style>
   </head>
   <body>
     <div id="app"></div>

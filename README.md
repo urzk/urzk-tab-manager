@@ -91,6 +91,7 @@ Other scripts:
 | `pnpm lint` | Run ESLint. |
 | `pnpm package` | Build and zip `dist/` into `release/urzk-tab-manager-<version>.zip`. |
 | `pnpm icons` | Render `assets/*.svg` to `public/icons/*.png` and the store promo tile. |
+| `pnpm screenshots` | Retake the store screenshots (`store/screenshots/`, en + ja) from the demo page with headless Chrome. |
 | `pnpm build:mock` | Build the demo page into `dist-mock/`. |
 
 The version lives only in `package.json`; the build injects it into

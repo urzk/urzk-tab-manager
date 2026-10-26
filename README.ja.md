@@ -69,6 +69,7 @@ pnpm build         # 拡張機能を dist/ にビルド
 | `pnpm lint` | ESLint を実行 |
 | `pnpm package` | ビルドして `dist/` を `release/urzk-tab-manager-<version>.zip` に圧縮 |
 | `pnpm icons` | `assets/*.svg` から `public/icons/*.png` とストア用プロモーションタイルを書き出す |
+| `pnpm screenshots` | デモページから headless Chrome でストア用スクリーンショット（`store/screenshots/`、英日）を撮り直す |
 | `pnpm build:mock` | デモページを `dist-mock/` にビルド |
 
 バージョンは `package.json` だけで管理し、ビルド時に `dist/manifest.json` に書き込まれます。
