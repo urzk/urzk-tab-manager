@@ -29,7 +29,7 @@ Features
 
 Privacy
 
-Urzk Tab Manager does not collect, store or transmit any data. Tab titles and URLs are read only to draw the list, and stay in memory on your computer. There are no analytics, no accounts and no remote code.
+Urzk Tab Manager reads the titles and URLs of your open tabs only to show and manage them on the new tab page. This information is handled in memory on your computer and is never saved or sent to the developer or anyone else. There are no analytics, no accounts and no remote code.
 
 Urzk Tab Manager is free and open source software under the GPL-3.0-or-later license: https://github.com/urzk/urzk-tab-manager
 
@@ -69,9 +69,16 @@ No, I am not using remote code. All JavaScript is packaged in the extension, and
 
 ## Data usage
 
-This extension does not collect or transmit user data.
+Check **Web history** only. Leave every other data type unchecked
+(personally identifiable information, health information, financial and
+payment information, authentication information, personal communications,
+location, user activity, website content).
 
-None of the data types are collected (personally identifiable information, health information, financial and payment information, authentication information, personal communications, location, web history, user activity, website content). Tab titles and URLs are processed in memory on the user's device only, to draw the tab list, and are never stored or sent anywhere.
+Web history is declared because the extension reads the titles and URLs of the
+user's open tabs. Chrome Web Store asks for this disclosure even when the data
+never leaves the device. If the dashboard asks how the data is used, enter:
+
+> The titles and URLs of open tabs are read only to show the tab list on the new tab page and to carry out the user's actions (switch, move, discard, close). They are processed in memory on the user's device, are never stored, and are never sent to the developer or any third party.
 
 Certifications (check all three):
 

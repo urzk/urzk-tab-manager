@@ -101,7 +101,7 @@ pnpm build         # 拡張機能を dist/ にビルド
 
 ## プライバシー
 
-Urzk Tab Manager は、データを一切収集・保存・送信しません。[PRIVACY.md](PRIVACY.md#日本語) をご覧ください。
+Urzk Tab Manager は、タブのタイトルと URL を表示のためだけに端末のメモリ上で扱い、保存も送信もしません。[PRIVACY.md](PRIVACY.md#日本語) をご覧ください。
 
 ## クレジット
 
