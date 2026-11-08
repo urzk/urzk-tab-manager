@@ -4,13 +4,16 @@
 
 ## English
 
-Last updated: 2026-10-26
+Last updated: 2026-11-08
 
 This policy covers the Urzk Tab Manager extension for Google Chrome.
 
 ### Summary
 
-Urzk Tab Manager does not collect, store or transmit any user data.
+Urzk Tab Manager reads information about your open tabs (including their
+titles and URLs) only to show and manage them on the new tab page. This
+information stays in memory on your device. It is never saved, and never sent
+to the developer or to any third party.
 
 ### What the extension accesses
 
@@ -34,6 +37,15 @@ Urzk Tab Manager does not collect, store or transmit any user data.
   favicon images, described below.
 - There are no analytics, tracking, advertising, accounts or remote code.
 
+### Chrome Web Store User Data Policy
+
+The use of information received from Google APIs will adhere to the
+[Chrome Web Store User Data Policy](https://developer.chrome.com/docs/webstore/program-policies/policies),
+including the Limited Use requirements. In particular, tab information is used
+only to provide the extension's single purpose described above; it is not sold,
+not transferred to third parties, not used for advertising, not used to
+determine creditworthiness or for lending purposes, and not read by humans.
+
 ### Favicons
 
 To display a tab's favicon, the browser loads the image from the URL that the
@@ -56,13 +68,13 @@ https://github.com/urzk/urzk-tab-manager/issues.
 
 ## 日本語
 
-最終更新日: 2026-10-26
+最終更新日: 2026-11-08
 
 このポリシーは、Google Chrome 用拡張機能 Urzk Tab Manager に適用されます。
 
 ### 概要
 
-Urzk Tab Manager は、ユーザーデータを一切収集・保存・送信しません。
+Urzk Tab Manager は、開いているタブの情報（タイトルや URL を含む）を、新しいタブのページで一覧表示・管理するためだけに読み取ります。これらの情報はお使いの端末のメモリ上でのみ扱い、保存することも、開発者や第三者に送信することもありません。
 
 ### 拡張機能がアクセスする情報
 
@@ -75,6 +87,10 @@ Urzk Tab Manager は、ユーザーデータを一切収集・保存・送信し
 - ストレージ API は使用せず、タブの情報をディスクや同期ストレージなどに保存しません。
 - タブの情報やその他のデータを、開発者や第三者に送信しません。ネットワーク通信は、下記のファビコン画像の読み込みのみです。
 - アクセス解析、トラッキング、広告、アカウント、リモートコードはありません。
+
+### Chrome ウェブストアのユーザーデータに関するポリシー
+
+Google API から受け取った情報の使用は、Limited Use（使用制限）の要件を含む [Chrome ウェブストアのユーザーデータに関するポリシー](https://developer.chrome.com/docs/webstore/program-policies/policies) に従います。特に、タブの情報は上記の単一の用途を提供するためにのみ使用し、販売、第三者への転送、広告への利用、信用力の判断や融資目的での利用は行わず、人が閲覧することもありません。
 
 ### ファビコン
 

@@ -133,7 +133,8 @@ Run through this before each release, with the built `dist/` loaded in Chrome.
 
 ## Privacy
 
-Urzk Tab Manager does not collect, store or transmit any data. See
+Urzk Tab Manager reads tab titles and URLs only to show them, in memory on your
+device, and never saves or sends them anywhere. See
 [PRIVACY.md](PRIVACY.md).
 
 ## Attribution
