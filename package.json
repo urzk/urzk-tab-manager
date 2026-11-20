@@ -1,7 +1,7 @@
 {
   "name": "urzk-tab-manager",
   "version": "0.1.0",
-  "description": "Tab manager that replaces the new tab page",
+  "description": "Tab manager for every tab in every window, opened from the toolbar",
   "type": "module",
   "scripts": {
     "dev": "pnpm dev:mock",

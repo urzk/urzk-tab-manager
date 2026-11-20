@@ -4,7 +4,7 @@ Urzk Tab Manager 1.0 の設計を図で示します。図は Mermaid で書い�
 
 ## 1. 全体構成
 
-拡張機能は、新規タブページと Service Worker の2つのエントリポイントでできています。Chrome API には、必ず `ChromeApi` インターフェース経由でアクセスします。そのため、テストやデモでは本物の Chrome をインメモリの `FakeChrome` に差し替えられます。
+拡張機能は、タブマネージャーのページと Service Worker の2つのエントリポイントでできています。マネージャーはツールバーボタンか Alt+Shift+T で開き、新しいタブのページは置き換えません。Chrome API には、必ず `ChromeApi` インターフェース経由でアクセスします。そのため、テストやデモでは本物の Chrome をインメモリの `FakeChrome` に差し替えられます。
 
 ```mermaid
 flowchart LR
@@ -15,10 +15,10 @@ flowchart LR
   end
 
   subgraph SW["Service Worker (background/)"]
-    SWE["service-worker.ts<br/>action.onClicked"] --> OM["openManager()<br/>既存の管理タブにフォーカス、なければ作成"]
+    SWE["service-worker.ts<br/>action.onClicked"] --> OM["openManager()<br/>現在のウィンドウの管理タブに切替、なければそこに作成"]
   end
 
-  subgraph NT["新規タブページ (newtab/)"]
+  subgraph NT["タブマネージャーのページ (manager/)"]
     MAIN["main.ts<br/>localizeDocument + mount(App)"] --> APP["App.svelte"]
     APP --> SYNC["TabSync<br/>(lib/state/sync.ts)"]
     APP --> ACT["Actions<br/>(lib/chrome/actions.ts)"]
@@ -285,13 +285,13 @@ sequenceDiagram
   participant Chrome as ChromeApi
 
   User->>SW: ツールバーボタン / Alt+Shift+T（_execute_action）
-  SW->>Chrome: tabs.query({})
-  Chrome-->>SW: 全タブ
-  SW->>SW: 管理ページのタブ（URL か chrome://newtab）を探す
-  alt 見つかった（現在のウィンドウのものを優先）
-    SW->>Chrome: tabs.update(active) + windows.update(focused)
-  else 見つからない
-    SW->>Chrome: tabs.create({url: newtab/index.html})
+  SW->>Chrome: tabs.query({windowId: 押したウィンドウ})
+  Chrome-->>SW: そのウィンドウのタブ
+  SW->>SW: url / pendingUrl が manager/index.html のタブを探す
+  alt 見つかった（複数なら一番左）
+    SW->>Chrome: tabs.update(active)
+  else 見つからない（ほかのウィンドウにあっても無視）
+    SW->>Chrome: tabs.create({url: manager/index.html, windowId})
   end
 ```
 
@@ -301,7 +301,7 @@ sequenceDiagram
 flowchart LR
   subgraph Local["ローカル"]
     SRC["src/ + public/_locales"] --> VITE["vite build<br/>+ manifestPlugin<br/>（package.json の version を注入）"]
-    VITE --> DIST["dist/<br/>manifest.json, newtab/, service-worker.js"]
+    VITE --> DIST["dist/<br/>manifest.json, manager/, service-worker.js"]
     DIST --> PKG["pnpm package → zip"]
     REL["pnpm release:major|minor|patch<br/>version 更新 + CHANGELOG + コミット + タグ"]
     MOCK["pnpm dev / build:mock<br/>FakeChrome のデモ"] --> SHOT["pnpm screenshots<br/>store/screenshots/*.png"]

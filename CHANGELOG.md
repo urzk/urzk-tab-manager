@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Extension and toolbar icons.
-- Clicking the toolbar button or pressing Alt+Shift+T focuses the tab manager if it is already open, or opens it otherwise.
+- Clicking the toolbar button or pressing Alt+Shift+T switches to the tab manager in the current window, or opens it there.
 - Japanese UI, selected automatically from the browser language.
 - Search is case-insensitive and matches words in order.
 - `site:` filter to search by site, and `loaded:` (short form `l:`) filter to search by load state.
@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- The tab manager no longer replaces the new tab page. Open it from the toolbar button or with Alt+Shift+T.
 - Tab and window state is now event-driven, with a periodic reconcile to catch missed events.
 - Collapsed windows are not rendered, and hover actions are rendered only when needed, so large tab counts stay responsive.
 - Rebuilt on Svelte 5 and Vite 8.
