@@ -10,6 +10,8 @@
     // must not make the check pass locally while it fails in CI
     "typeRoots": ["./node_modules/@types"],
     "types": ["node"],
+    // Vite's native config loader needs explicit .ts extensions
+    "allowImportingTsExtensions": true,
     "emitDeclarationOnly": true,
     "outDir": "./node_modules/.tmp/tsconfig.node"
   },
