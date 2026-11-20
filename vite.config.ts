@@ -15,7 +15,7 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        newtab: resolve(__dirname, "src/newtab/index.html"),
+        manager: resolve(__dirname, "src/manager/index.html"),
         "service-worker": resolve(__dirname, "src/background/service-worker.ts"),
       },
       output: {

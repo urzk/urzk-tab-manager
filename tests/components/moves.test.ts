@@ -4,7 +4,7 @@ import en from "../../public/_locales/en/messages.json";
 import { setFallbackMessages } from "../../src/lib/i18n";
 import { createTabSync } from "../../src/lib/state/sync";
 import { createFakeChrome, type FakeChrome } from "../../src/mock/fake-chrome";
-import App from "../../src/newtab/components/App.svelte";
+import App from "../../src/manager/components/App.svelte";
 
 // Every card move (buttons and keyboard) against the fake Chrome, which
 // rejects moves that break "pinned tabs first". The grid is 4 columns wide,

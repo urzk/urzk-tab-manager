@@ -34,3 +34,8 @@ test("template icons exist on disk", () => {
     }
   }
 });
+
+test("does not override Chrome's new tab page", () => {
+  // the manager opens from the toolbar button only
+  expect(template).not.toHaveProperty("chrome_url_overrides");
+});

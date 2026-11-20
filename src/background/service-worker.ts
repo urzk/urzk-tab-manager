@@ -6,7 +6,7 @@ import { openManager } from "./open-manager";
 chrome.action.onClicked.addListener((tab) => {
   void openManager(
     realChromeApi(),
-    chrome.runtime.getURL("newtab/index.html"),
+    chrome.runtime.getURL("manager/index.html"),
     tab.windowId,
   );
 });

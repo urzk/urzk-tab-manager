@@ -5,8 +5,8 @@ import { setFallbackMessages } from "../../src/lib/i18n";
 import { createActions } from "../../src/lib/chrome/actions";
 import type { TabLite } from "../../src/lib/state/model";
 import { createFakeChrome } from "../../src/mock/fake-chrome";
-import TabCard from "../../src/newtab/components/TabCard.svelte";
-import Favicon from "../../src/newtab/components/Favicon.svelte";
+import TabCard from "../../src/manager/components/TabCard.svelte";
+import Favicon from "../../src/manager/components/Favicon.svelte";
 
 const context = new Map([
   ["getURL", (p: string) => "chrome-extension://test" + p],

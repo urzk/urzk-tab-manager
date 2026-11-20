@@ -24,9 +24,6 @@
     "service_worker": "service-worker.js",
     "type": "module"
   },
-  "chrome_url_overrides": {
-    "newtab": "newtab/index.html"
-  },
   "commands": {
     "_execute_action": {
       "suggested_key": { "default": "Alt+Shift+T" },
