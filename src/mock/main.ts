@@ -1,6 +1,6 @@
-import "../newtab/app.css";
+import "../manager/app.css";
 import { mount } from "svelte";
-import App from "../newtab/components/App.svelte";
+import App from "../manager/components/App.svelte";
 import { setFallbackMessages } from "../lib/i18n";
 import en from "../../public/_locales/en/messages.json";
 import ja from "../../public/_locales/ja/messages.json";

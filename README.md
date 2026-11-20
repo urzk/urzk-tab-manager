@@ -2,9 +2,10 @@
 
 English | [日本語](README.ja.md)
 
-A Chrome extension that replaces the new tab page with an overview of every
-open tab in every window, so you can find, organize and close tabs quickly,
-even with more than 1000 of them.
+A Chrome extension that shows every open tab in every window on one page, so
+you can find, organize and close tabs quickly, even with more than 1000 of
+them. Open it from the toolbar button or with Alt+Shift+T; your new tab page
+stays as it is.
 
 ![Tab overview](store/screenshots/en-1.png)
 
@@ -20,8 +21,8 @@ even with more than 1000 of them.
   down, left or right. With the keyboard, Enter switches to the focused tab
   and the arrow keys move it.
 - **Search** by title, site and load state (see below).
-- **Toolbar button and shortcut** to open the manager, or focus it if it is
-  already open.
+- **Toolbar button and shortcut** to open the manager in the current window,
+  or switch to it if that window already has it open.
 - **Accurate with many tabs.** The page follows Chrome's tab events and
   regularly checks itself against Chrome, so any drift is corrected about half
   a second after activity stops, and within 30 seconds at most.
@@ -43,8 +44,9 @@ buttons are disabled.
 
 ## Keyboard shortcut
 
-Press **Alt+Shift+T** (or click the toolbar button) to open the manager. If
-it is already open in some tab, that tab and its window are focused instead.
+Press **Alt+Shift+T** (or click the toolbar button) to open the manager in
+the current window. If that window already has a manager tab, it switches to
+that tab instead; manager tabs in other windows are left alone.
 To change the shortcut, open `chrome://extensions/shortcuts`.
 
 On a tab card: **Enter** switches to the tab, and the **arrow keys** move it.
@@ -121,9 +123,9 @@ How to open 1000+ tabs with `scripts/open-many-tabs.sh` and what to measure
 
 Run through this before each release, with the built `dist/` loaded in Chrome.
 
-- [ ] `dist/` loads in Chrome via **Load unpacked** without errors, and opening a new tab shows the manager.
+- [ ] `dist/` loads in Chrome via **Load unpacked** without errors, and opening a new tab still shows Chrome's own new tab page.
 - [ ] With 1000 tabs (`scripts/open-many-tabs.sh dist 1000 4`), measure memory, DOM node count and time to render, and record them in [docs/benchmarks.md](docs/benchmarks.md).
-- [ ] The toolbar button opens the manager, or focuses it if it is already open.
+- [ ] The toolbar button opens the manager in the current window, or switches to it if that window already has one. A manager tab in another window is not focused.
 - [ ] Alt+Shift+T does the same, and the shortcut can be changed at `chrome://extensions/shortcuts`.
 - [ ] With the browser language set to English, the UI is in English.
 - [ ] With the browser language set to Japanese, the UI is in Japanese.

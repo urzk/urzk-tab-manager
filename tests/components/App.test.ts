@@ -15,7 +15,7 @@ import {
   type FakeChrome,
   type FakeSeed,
 } from "../../src/mock/fake-chrome";
-import App from "../../src/newtab/components/App.svelte";
+import App from "../../src/manager/components/App.svelte";
 
 const tab = (title: string) => ({
   title,

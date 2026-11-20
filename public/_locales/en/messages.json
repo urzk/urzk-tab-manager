@@ -4,7 +4,7 @@
     "description": "Extension name"
   },
   "extDescription": {
-    "message": "See and manage every tab in every window from your new tab page.",
+    "message": "See and manage every tab in every window, one click away on the toolbar.",
     "description": "Extension description shown in the Chrome Web Store"
   },
   "actionTitle": {
